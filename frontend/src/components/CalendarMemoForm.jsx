@@ -31,6 +31,25 @@ const CalendarMemoForm = ({
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    const getUserId = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/planbee/auth/getUserId`,
+          {
+            withCredentials: true,
+          }
+        );
+        console.log("유저 아이디 fetch 성공", response.data);
+        setUserId(response.data);
+      } catch (error) {
+        console.error("유저 아이디 에러 발생", error);
+      }
+    };
+    getUserId();
+  }, []);
 
   const handleAdd = async () => {
     const clickDate = getFormattedTodayYYMM();
@@ -39,7 +58,7 @@ const CalendarMemoForm = ({
     const requestData = {
       ...form,
       calDate,
-      userId: "팥붕", // 아직 세션 설정을 안해놔서 하드 코딩 해놓겠습니다
+      userId: userId, // 아직 세션 설정을 안해놔서 하드 코딩 해놓겠습니다
     };
 
     try {

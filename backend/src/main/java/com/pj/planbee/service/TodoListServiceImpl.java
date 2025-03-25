@@ -254,49 +254,59 @@ public int saveArchive() {
 	System.out.println("result: "+ result);
 	return result;
 }
-//@Override
-//public int saveArchiveDetail() {
-//	int result = 0;
-//	
-//	String yesterday = checkToday().get("yesterdayStr"); //어제날짜를 yyMMdd로 변환
-//	//date 기반으로 tdId 가져오기, 근데 중복되는 값은 안가져올 수 있도록
-//	List<Integer> tdIds = saMap.tdIdSearch(yesterday); 
-//	Set<Integer> uniqueTdIds = new HashSet<>(tdIds);//중복값은 저장하지 않도록 SET을 돌려주고
-//	List<Integer> uniTdIds = new ArrayList<>(uniqueTdIds); //다시 리스트로 변환함
-//	//그럼 이제 담기는 값은 tdId 숫자들이 담길 것임
-//	
-//	
-//	//System.out.println("service impl 어제날짜 해당하는 tdId값: " + uniTdIds.get(0));
-//	
-//	List<TDdetailDTO> toSaveDetail = new ArrayList<TDdetailDTO>();
-//	//archDetail에 저장할 값을 담아두기 위한 LIst 생성
-//	
-//	
-//	for(int i =0 ; i<uniTdIds.size(); i++) { //인덱스번호 순회해가면서 찾아서 넣어둔다.
-//		 toSaveDetail.addAll(saMap.todoDetailCheck(uniTdIds.get(i)));
-//	}
-//	
-//	//System.out.println("ser impl tdDetail 첫번째 값? :" + archDetail.size());
-//	List<TDdetailDTO> checkExist = new ArrayList<TDdetailDTO>(); //archiveD에 해당 값이 있는지 확인
-//	checkExist = saMap.checkExist(result)
-//	//tdDetailId를 바탕으로 해당 값이 있는지 하나 찾은 후, 
-//	//그 checkExist 배열이 0이면 toSaveDetail의 값을 입력한다
-//	
-//	if(checkExist)
-//	if(!archDetail.isEmpty()) {
-//		for(int i =0; i<archDetail.size(); i++) {
-//			List<TDdetailDTO> detail = archDetail;
-//			int count = saMap.checkExist(detail.getTdId());
-//			
-//			if(count==0) {
-//				result = saMap.toArchiveDetail(detail);
-//			}else {
-//				System.out.println("auto save detail: 이미 존재하므로 실행하지 않음");
-//			}
-//		}	
-//	}	
-//	return result;
-//}
+@Override
+@Transactional
+public int saveArchiveDetail() {
+   int result = 0;
+   //
+   try {
+      String yesterday = checkToday().get("yesterdayStr"); //어제날짜를 yyMMdd로 변환
+      //date 기반으로 tdId 가져오기, 근데 중복되는 값은 안가져올 수 있도록
+      Set<Integer> uiqueTdIds = new HashSet<>(saMap.tdIdSearch(yesterday));
+      List<Integer> tdIds = saMap.tdIdSearch(yesterday); 
+      //System.out.println(tdIds.get(1));
+      Set<Integer> uniqueTdIds = new HashSet<>(tdIds);//중복값은 저장하지 않도록 SET을 돌려주고
+      List<Integer> uniTdIds = new ArrayList<>(uniqueTdIds); //다시 리스트로 변환함
+      //그럼 이제 담기는 값은 tdId 숫자들이 담길 것임
+      
+      
+      //System.out.println("service impl 어제날짜 해당하는 tdId값: " + uniTdIds.get(0));
+      
+      List<TDdetailDTO> toSaveDetail = new ArrayList<TDdetailDTO>();
+      //archDetail에 저장할 값을 담아두기 위한 LIst 생성
+         
+      for(int i =0 ; i<uniTdIds.size(); i++) { //인덱스번호 순회해가며 tdId에 대한 tdDetail 테이블 값을 찾아서 넣어둔다.
+          toSaveDetail.addAll(saMap.todoDetailCheck(uniTdIds.get(i)));
+      }
+      
+      System.out.println("ser impl tdDetail 첫번째 값? :" + toSaveDetail.get(0).getTdDetail());
+      List<TDdetailDTO> checkExist = new ArrayList<>();
+      for (int i = 0; i < toSaveDetail.size(); i++) {
+         checkExist.clear();
+         checkExist = saMap.checkExist(toSaveDetail.get(i).getTdDetailId());
+         
+         if (checkExist.isEmpty()) {
+            int archiveId = saMap.getArchId(yesterday); // 날짜 기반으로 archiveId 가져옴
+            toSaveDetail.get(i).setTdId(archiveId);
+            result = saMap.toArchiveDetail(toSaveDetail.get(i));
+
+            // 삽입 결과 확인
+            if (result == 0) {
+                System.out.println("데이터 삽입 실패: " + toSaveDetail.get(i).getTdDetailId());
+            } else {
+                System.out.println("데이터 삽입 성공: " + toSaveDetail.get(i).getTdDetailId());
+            }
+         }
+      }
+   } catch (Exception e) {
+      e.printStackTrace();
+      System.out.println("오류발생");
+      throw e;
+   }
+   
+   
+   return result;
+}
 
 
 

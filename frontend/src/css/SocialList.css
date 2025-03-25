@@ -1,0 +1,140 @@
+/* src/css/Social.css */
+
+/* 
+   만약 main_container, sidebar_and_content, main_content가
+   다른 곳에서 이미 정의되어 있다면, 아래는 참고만 하세요.
+*/
+
+.social_container {
+    display: flex;
+  flex-direction: column;
+  height: 100vh;
+  }
+  
+  .sidebar_and_content {
+    display: flex;
+    flex: 1; 
+  }
+  
+  .main_content {
+    width: 800px;
+    height: 820px;
+    flex: 1;        /* 사이드바를 제외한 나머지 공간 전부 사용 */
+    display: flex;
+    flex-direction: column;
+  
+    /* 패딩을 너무 크게 주면 화면 축소 시 가로 스크롤 생길 수 있음 */
+    padding: 70px 100px 50px 130px;  
+    box-sizing: border-box;
+  }
+  
+  /* 만약 상단 배너가 따로 있다면, main_container 안에서
+     Banner가 차지하는 영역도 있을 수 있으니 참고.
+  */
+  
+  /* 소셜 영역 컨테이너 */
+  .social_header h2 {
+    margin: 0 0 20px 0;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  /* 실제 그룹 리스트를 감싸는 컨테이너 */
+  .social_container {
+    /* 안쪽 여백, 배경색 등은 필요에 따라 조절 */
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    /* padding: 20px; */
+  }
+  
+  /* 스크롤이 필요하면 max-height 등을 지정해도 좋습니다 */
+  .group_list {
+    flex: 1;
+    overflow-y: auto;   /* 내용 넘칠 때 세로 스크롤 */
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: calc(100% - 10px);
+    padding-right: 40px;
+    
+  }
+  
+  /* 스크롤바 커스터마이징 */
+  .group_list::-webkit-scrollbar {
+    width: 50px;
+  }
+  .group_list::-webkit-scrollbar-track {
+    background-color: white;
+    border-radius: 35px;
+  }
+  .group_list::-webkit-scrollbar-thumb {
+    border: 15px solid white; 
+    background-color: #ccc;
+    border-radius: 35px;
+  }
+  
+ /* 그룹 아이템 컨테이너 (카드 전체) */
+ .group_item {
+    display: flex;
+    /* 세로 방향으로도 늘어나게 하고 싶다면 align-items 옵션 변경 */
+    align-items: stretch; /* stretch: 자식들의 높이를 동일하게 맞춤 */
+    margin-bottom: 16px;
+    border-radius: 35px;
+    background-color: #fff;
+    overflow: hidden; /* 둥근 모서리 유지 위해 */
+    min-height: 160px;
+  }
+  
+  /* 왼쪽: 그룹 제목, 설명 */
+  .group_left {
+    flex: 5; 
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+  }
+  
+  /* 오른쪽: Join 버튼을 넣는 영역 */
+  .group_right {
+    flex: 1; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .group_title {
+    font-size: 35px;  /* 폰트 크기 */
+    font-weight: bold;  /* 두껍게 */
+    margin: 0 0 8px 0;  /* 아래쪽 여백 */
+  }
+
+  .group_desc {
+    font-size: 20px;  /* 설명 글자 크기 */
+    color: #666;      /* 색상 */
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  /* Join 버튼을 전체 영역에 맞춰 늘어나는 예시 */
+  .join_button {
+    width: 100%;       /* 가로로 꽉 채움 */
+    height: 100%;      /* 세로로 꽉 채움 (부모 .group_right 높이에 따라 자동) */
+    border: none;
+    background-color: #f4cc3a;
+    color: white;
+    font-size: 38px;   /* 폰트 크기 (상황에 맞춰 조절) */
+    font-weight: bold;
+    cursor: pointer;
+    /* 텍스트 중앙 정렬 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  @media (max-width: 1200px) {
+    .sidebar_and_content {
+      /* 사이드바를 숨기거나, 위로 올리거나, 줄이는 등 */
+      flex-direction: column;
+    }
+
+}

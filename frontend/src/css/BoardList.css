@@ -1,0 +1,299 @@
+/* 메인 영역 컨테이너 */
+.group_container {
+    background-color: #f5f5f5; 
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative; /* 글쓰기 아이콘 위치 */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  
+  /* 상단 바 */
+  .group_top_bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  /* 그룹이름 */
+  .group_name {
+    margin: 0;
+    font-weight: bold;
+    font-size: 55px;
+  }
+  
+  /* 상단 우측( 탈퇴하기, 검색창 등) */
+  .group_top_right {
+    display: flex;
+    align-items: center;
+    gap: 16px; /* 요소 간 간격 */
+  }
+  
+  .group_member_count {
+    font-size: 16px;
+    color: #666;
+  }
+
+  /*탈퇴하기 버튼*/
+.leave_icon {
+    background-color: hsl(0, 0%, 89%);
+    color: #000;
+    border: 1px solid hsl(0, 0%, 89%);
+    border-radius: 16px;
+    padding: 8px 14px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+ 
+  .leave_icon:hover {
+    background-color: #f0f0f0; 
+    color: #333;
+  }
+  
+  
+  /* 상단 검정색 줄 */
+  .group_black_line {
+    border: none;
+    border-top: 2px solid #000;
+    margin-bottom: 16px;
+  }
+  
+
+  .white_box {
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: relative;
+  
+    /* 가로는 최대 1200px까지만, 그 이하는 화면에 맞춰 줄어듦 */
+    width: 1450px; 
+     
+    /* 높이는 내용물에 따라 자동으로 잡히도록 지정 */
+    /* 필요하다면 min-height 정도만 지정할 수 있음 */
+    /* min-height: 600px; */
+    height: 700px;
+  
+    margin: 10px 0 0 50px; /* 화면 중앙 정렬 */
+  }
+  
+  
+
+ /* 정렬 컨테이너 (최신순 + 검색창) */
+.group_sort {
+  display: flex;
+  height: 60px;
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  position: relative; /* 드롭다운 정렬을 위해 부모 요소를 relative로 설정 */
+}
+
+/* 최신순 버튼 */
+.sort_button {
+  width: 170px; /* 버튼 너비 유지 */
+  background-color: #ffe066;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  cursor: pointer;
+  height: 100%;
+  box-sizing: border-box;
+  position: relative; /* 버튼 내부 요소 정렬 */
+}
+
+/* 드롭다운 (최신순 아래 배치) */
+.sort_dropdown {
+  position: absolute;
+  top: 100%; /* 버튼 바로 아래 정렬 */
+  left: 0;
+  width: 100%; /* 최신순 버튼과 동일한 너비 */
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  z-index: 10;
+  display: none; /* 기본적으로 숨김 */
+}
+
+/* 드롭다운 보이기 */
+.sort_dropdown.visible {
+  display: block;
+}
+
+/* 드롭다운 항목 스타일 */
+.dropdown_option {
+  padding: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.dropdown_option:hover {
+  background-color: #f0f0f0;
+}
+
+
+/* 검색 드롭다운 컨테이너 */
+.search_dropdown_container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* 검색 드롭다운 버튼 */
+.search_dropdown {
+  width: 170px;
+  height: 58px;
+  padding: 10px;
+  background: #ffe066;
+  color: black;
+  font-weight: bold;
+  font-size: 20px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 16px;
+  position: relative;
+  margin: auto;
+  margin-left: auto;
+  line-height: 38px;
+}
+
+/* 검색 드롭다운 메뉴 */
+.search_dropdown_menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  display: none;
+  z-index: 10;
+}
+
+/* 드롭다운이 보일 때 */
+.search_dropdown:hover .search_dropdown_menu {
+  display: block;
+}
+
+/* 드롭다운 옵션 스타일 */
+.search_dropdown_menu .dropdown_option {
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.search_dropdown_menu .dropdown_option:hover {
+  background: #f0f0f0;
+}
+
+
+
+  .group_search{
+    display: flex;
+  }
+  /* 오른쪽 연회색 영역 (검색창 + 돋보기) */
+  .search_input {
+    flex: 1;                /* 남은 공간 전부 사용 */
+    border: none;
+    outline: none;
+    font-size: 18px;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+  }
+  
+  /* 돋보기 아이콘 */
+  .search_icon {
+    width: 40px;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    color: #000;
+  }
+  .search_icon img{
+    width: 30px;
+    height: 30px;
+  }
+  
+  /* 게시글 목록 (옅은 회색 블럭) */
+  .post_list {
+    max-height: 400px; /* 스크롤 영역 높이 */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  /* 스크롤바 (Social에 있던 예시 참고) */
+  .post_list::-webkit-scrollbar {
+    width: 50px;
+  }
+  .post_list::-webkit-scrollbar-track {
+    background-color: white;
+    border-radius: 35px;
+  }
+  .post_list::-webkit-scrollbar-thumb {
+    border: 15px solid white; 
+    background-color: #ccc;
+    border-radius: 35px;
+  }
+  
+  /* 게시글 아이템 (옅은 회색 블럭) */
+  .post_item {
+    background-color: #eaeaea; /* 옅은 회색 */
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  
+  .post_text {
+    margin: 10px;
+    font-size: 28px;
+    margin-bottom: 8px;
+    color: #333;
+  }
+  
+  .post_meta {
+    
+    margin: 10px 0px 5px 10px;
+    display: flex;
+    gap: 16px;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  /* 글쓰기 아이콘 (원형 +) */
+  .write_icon {
+    position: absolute;
+    left: 40px;
+    bottom:40px;
+    width: 90px;
+    height: 90px;
+    background-color: #ffe066;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+.write_icon > div:first-child{
+  color: #fff;
+  font-size: 50px;
+  font-weight: bold;
+  line-height: 1;
+     background-color:#ffe066;;
+}
+  
+  

@@ -61,7 +61,7 @@ public class CalendarServiceImpl implements CalendarService {
         int curStreak = 0;
 
         for (double progress : userProgress) {
-            if (progress > 0.3) {
+            if (progress > 0.7) {
                 tempStreak++;
                 maxStreak = Math.max(maxStreak, tempStreak);
             } else {
@@ -166,6 +166,7 @@ public class CalendarServiceImpl implements CalendarService {
 
 	}
 
+	// 해당 월의 평균 진척도
 	@Override
 	public double monthProgress(@Param("yyMM") String yyMM, @Param("sessionId") String sessionId) {
 		  return calMap.monthProgress(yyMM, sessionId);

@@ -1,65 +1,78 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-    
 
-<mapper namespace="com.pj.planbee.mapper.TDdetailMapper"> <!-- 여기가 사용할 매퍼를 연결해주는 역할, 경로주의 -->
-	<resultMap type="com.pj.planbee.dto.TDdetailDTO" id="tddetail">
-		<id property="tdDetailId" column="tododetail_id" /> <!-- PK로 지정한 것은 id로 받아준다 -->
-		<result property="tdDetail" column="tododetail" />
-		<result property="tdDetailState" column="tododetail_state" />
-		<result property="tdDetailTime" column="tododetail_time"/>
-		<result property="tdId" column="todo_id" />
-		
-	</resultMap>
-	<!-- 전체 가져오는 테스트 기능, 성공 -->
-	 <select id="getList" resultMap ="tddetail">
-    	select * from ToDoList_Detail
-    	
+<mapper namespace="com.pj.planbee.mapper.TDdetailMapper">
+
+    <resultMap type="com.pj.planbee.dto.TDdetailDTO" id="tddetail">
+        <id property="tdDetailId" column="tododetail_id" />
+        <result property="tdDetail" column="tododetail" />
+        <result property="tdDetailState" column="tododetail_state" />
+        <result property="tdDetailTime" column="tododetail_time"/>
+        <result property="tdId" column="todo_id" />
+    </resultMap>
+
+    <!-- 전체 가져오기 -->
+    <select id="getList" resultMap="tddetail">
+        SELECT * FROM ToDoList_Detail
     </select>
-    
+
+    <!-- 최근 삽입된 id 가져오기 -->
     <select id="getLatest">
-    	select last_insert_id()
+        SELECT LAST_INSERT_ID()
     </select>
-    
-    <!-- TodoId에 따라 하나를 가져오는 기능, 성공 -->
-    <select id="getTodo" resultMap ="tddetail">
-    	select * from ToDoList_Detail where todo_id=#{tdId}
-    	<!-- 입력날짜 빠른 순으로 정렬 -->
+
+    <!-- 특정 todo_id의 상세목록 -->
+    <select id="getTodo" resultMap="tddetail">
+        SELECT * FROM ToDoList_Detail WHERE todo_id = #{tdId}
     </select>
-    
-    <insert id="todoWrite"> 
-	<!-- 투두디테일 작성하는 부분, 이 자료형으로는 성공
-    자동으로 숫자 올라가는 부분, 날짜자료형 두 가지, 맨마지막 숫자 어떻게 할지 조정이 필요함 -->
-    	insert into ToDoList_Detail (tododetail, tododetail_state, tododetail_time, todo_id) 
-    	values (#{tdDetail}, 0, #{tdDetailTime}, #{tdId});
+
+    <!-- 투두디테일 추가 -->
+    <insert id="todoWrite">
+        INSERT INTO ToDoList_Detail (tododetail, tododetail_state, tododetail_time, todo_id)
+        VALUES (#{tdDetail}, 0, #{tdDetailTime}, #{tdId})
     </insert>
-    
+
+    <!-- 완료 상태 변경 -->
     <update id="updateState">
-	<!-- 완료현황만 업데이트 하는 기능, 성공 -->
-    	update ToDoList_Detail set tododetail_state=#{state} where tododetail_id=#{tdDetailId}
+        UPDATE ToDoList_Detail
+        SET tododetail_state = #{state}
+        WHERE tododetail_id = #{tdDetailId}
     </update>
-    
+
+    <!-- 전체 수정 -->
     <update id="todoModify">
-	<!--  수정하는 기능.. 수정필요 -->
-    	update ToDoList_Detail set tododetail=#{tdDetail}, tododetail_time=#{tdDetailTime}, tododetail_state=#{tdDetailState} where tododetail_id=#{tdDetailId}
+        UPDATE ToDoList_Detail
+        SET tododetail = #{tdDetail},
+            tododetail_time = #{tdDetailTime},
+            tododetail_state = #{tdDetailState}
+        WHERE tododetail_id = #{tdDetailId}
     </update>
-    
+
+    <!-- 삭제 -->
     <delete id="todoDel">
-    <!-- 투두디테일 삭제하는 기능, 성공 -->
-    	delete from ToDoList_Detail where tododetail_id=#{tdDetailId}
+        DELETE FROM ToDoList_Detail
+        WHERE tododetail_id = #{tdDetailId}
     </delete>
-    
+
+    <!-- tododetail_id 조회 -->
     <select id="getTdDetailId">
-    	select tododetail_id from ToDoList_Detail where tododetail=#{tdDetail} and todo_id=#{tdId} order by tododetail_id DESC
+        SELECT tododetail_id
+        FROM ToDoList_Detail
+        WHERE tododetail = #{tdDetail} AND todo_id = #{tdId}
+        ORDER BY tododetail_id DESC
     </select>
-    
-    <!-- 진척도 보기 위해서 완료된 행의 숫자와 전체 행의 숫자를 가져오는 기능 -->
-    <select id="getComplete"> 
-    	select count(*) from ToDoList_Detail where todo_id=#{todoId} and tododetail_state =1 
+
+    <!-- 완료된 항목 수 -->
+    <select id="getComplete">
+        SELECT COUNT(*) FROM ToDoList_Detail
+        WHERE todo_id = #{todoId} AND tododetail_state = 1
     </select>
-    
+
+    <!-- 전체 항목 수 -->
     <select id="getTotal">
-    	select count(*) from ToDoList_Detail where todo_id=#{todoId}
+        SELECT COUNT(*) FROM ToDoList_Detail
+        WHERE todo_id = #{todoId}
     </select>
+
 </mapper>

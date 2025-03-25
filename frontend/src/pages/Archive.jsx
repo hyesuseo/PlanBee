@@ -124,18 +124,6 @@ const Archive = () => {
   useEffect(() => {
     const initialize = async () => {
       try {
-        // 세션 생성 및 확인
-        await axios.post(
-          `http://localhost:8080/planbee/archive/makeSession`,
-          null,
-          {
-            withCredentials: true,
-          }
-        );
-        await axios.get(`http://localhost:8080/planbee/archive/checkSession`, {
-          withCredentials: true,
-        });
-
         // 초기 데이터 6개 요청
         const response = await axios.get(
           `http://localhost:8080/planbee/archive?page=0&limit=6`,

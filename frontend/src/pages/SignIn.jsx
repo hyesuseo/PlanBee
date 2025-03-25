@@ -79,16 +79,33 @@ const SignIn = () => {
     userId: userId,
     userPw: userPw,
   };
+
   const Login = async () => {
     try {
       const response = await axios.post(
         `http://localhost:8080/planbee/auth/login`,
-        loginData
+        loginData,
+        { withCredentials: true }
       );
       console.log("로그인 완료!", response.data);
       navigate("/todolist");
+      makeSession();
     } catch (error) {
       console.error("로그인 실패!", error);
+    }
+  };
+
+  const makeSession = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/planbee/auth/session`,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("세션 요청 여부: ", response.data);
+    } catch (error) {
+      console.error("세션 fetching 실패", error);
     }
   };
 

@@ -4,7 +4,7 @@
 
 <mapper namespace="com.pj.planbee.mapper.LoginMapper">
 
-    <!-- Real_User 테이블을 위한 resultMap -->
+    <!-- real_user 테이블을 위한 resultMap -->
     <resultMap type="com.pj.planbee.dto.LoginDTO" id="realUserResultMap">
         <id property="userId" column="user_id" />
         <result property="userPw" column="user_pw" />
@@ -18,16 +18,16 @@
         <result property="userPer2" column="user_per_2" />
     </resultMap>
 
-    <!-- 로그인 쿼리 (Real_User 테이블 참조) -->
+    <!-- 로그인 쿼리 -->
     <select id="login" parameterType="map" resultMap="realUserResultMap">
-        SELECT * FROM Real_User 
+        SELECT * FROM real_user 
         WHERE user_id = #{userId} 
         AND user_pw = #{userPw}
     </select>
     
+    <!-- ID 중복 확인 -->
     <select id="countUserId" resultType="int">
-    	SELECT COUNT(*) FROM Real_User WHERE user_id = #{userId}
-	</select>
-    
+        SELECT COUNT(*) FROM real_user WHERE user_id = #{userId}
+    </select>
 
 </mapper>

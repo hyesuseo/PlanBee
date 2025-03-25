@@ -12,7 +12,7 @@ public class ProgressDTO {
 	      this.calId = calId;
 	   }
 	   public String getCalDetail1() {
-		return calDetail1;
+		return calDetail1; 
 	   }
 	   public void setCalDetail1(String calDetail1) {
 		this.calDetail1 = calDetail1;

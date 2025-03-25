@@ -1,61 +1,67 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-    
 
-<mapper namespace="com.pj.planbee.mapper.TodoListMapper"> <!-- 여기가 사용할 매퍼를 연결해주는 역할, 경로주의 -->
-	<resultMap type="com.pj.planbee.dto.TodoListDTO" id="todolist">
-		<id property="tdId" column="todo_id" /> 
-		<result property="tdDate" column="todo_date" /> <!-- PK로 지정한 것은 id로 받아준다 -->
-		<result property="tdMemo" column="todo_memo" />
-		<result property="tdProgress" column="todo_progress" />
-		<result property="userId" column="user_id"/>
-		
-	</resultMap>
-	<!-- 날짜와 todoId 가져오는 기능 -->
-	<select id="getDate"> 
-    	select todo_date, todo_id from ToDoList where user_id =#{sessionId}
+<mapper namespace="com.pj.planbee.mapper.TodoListMapper">
+
+    <resultMap type="com.pj.planbee.dto.TodoListDTO" id="todolist">
+        <id property="tdId" column="todo_id" />
+        <result property="tdDate" column="todo_date" />
+        <result property="tdMemo" column="todo_memo" />
+        <result property="tdProgress" column="todo_progress" />
+        <result property="userId" column="user_id"/>
+    </resultMap>
+
+    <!-- 날짜와 todoId 가져오기 -->
+    <select id="getDate">
+        SELECT todo_date, todo_id FROM ToDoList WHERE user_id = #{sessionId}
     </select>
-    
-    <select id="getLatest"> <!-- 가장 최근에 입력된 todoID 고유번호를 가져오는 쿼리문 -->
-    	select last_insert_id()
+
+    <!-- 최근 등록된 todo_id -->
+    <select id="getLatest">
+        SELECT LAST_INSERT_ID()
     </select>
-    
-    <!-- 날짜 확인해서 입력하는 기능 -->
-   
+
+    <!-- 날짜 기준으로 빈 메모 생성 -->
     <insert id="dateWrite">
-     	insert into ToDoList (todo_date, todo_memo, todo_progress, user_id) values (#{tdDate}, "", "0.0", #{sessionId})
+     	insert ignore into ToDoList (todo_date, todo_memo, todo_progress, user_id) values (#{tdDate}, "", "0.0", #{sessionId})
     </insert>
-    
-	<!-- 메모 가져오는 기능 -->
-	 <select id="getMemo" resultType ="com.pj.planbee.dto.TodoListDTO$SubTodoListDTO">
-    	select todo_id, todo_memo from ToDoList where todo_id=#{tdId}
+
+    <!-- 메모 조회 -->
+    <select id="getMemo" resultType="com.pj.planbee.dto.TodoListDTO$SubTodoListDTO">
+        SELECT todo_id, todo_memo FROM ToDoList WHERE todo_id = #{tdId}
     </select>
-    
+
+    <!-- 메모 수정 -->
     <update id="memoWrite">
-    	update ToDoList set todo_memo=#{tdMemo} where todo_id=#{tdId}
+        UPDATE ToDoList SET todo_memo = #{tdMemo} WHERE todo_id = #{tdId}
     </update>
-    
+
+    <!-- 메모 초기화 -->
     <update id="memoDel">
-    	update ToDoList set todo_memo= "" where todo_id=#{tdId}
+        UPDATE ToDoList SET todo_memo = "" WHERE todo_id = #{tdId}
     </update>
-    
+
+    <!-- 날짜 조회 -->
     <select id="dateSearch">
-    	select todo_date from ToDoList where todo_id=#{tdId}
+        SELECT todo_date FROM ToDoList WHERE todo_id = #{tdId}
     </select>
-    
+
+    <!-- 진척도 등록 -->
     <update id="regiProgress">
-    	update ToDoList set todo_progress=#{progress} where todo_id=#{tdId}
+        UPDATE ToDoList SET todo_progress = #{progress} WHERE todo_id = #{tdId}
     </update>
-    
-   <!-- 캘린더 -->
+
+    <!-- 캘린더용 진척도 리스트 -->
     <select id="userProgress">
-       select todo_progress from ToDoList where user_id=#{userId} order by todo_Date asc
+        SELECT todo_progress FROM ToDoList WHERE user_id = #{userId} ORDER BY todo_date ASC
     </select>
-    <!-- 일별 진척도 조회 -->
+
+    <!-- 특정 날짜의 진척도 -->
     <select id="getProgress" resultType="double">
-        SELECT todo_progress 
+        SELECT todo_progress
         FROM ToDoList
         WHERE todo_date = #{calDate} AND user_id = #{userId}
     </select>
+
 </mapper>

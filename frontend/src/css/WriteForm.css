@@ -1,0 +1,256 @@
+/* 🌟 메인 콘텐츠 영역 스타일 */
+.main_content {
+  flex: 1; /* 부모 컨테이너에서 남은 공간을 모두 차지하도록 설정 */
+  overflow-y: auto; /* 세로 스크롤 허용 */
+  padding: 20px; /* 내부 여백 */
+}
+
+/* 🌟 글쓰기 박스 스타일 */
+.white_box_writeform {
+  width: 1500px; /* 글쓰기 박스의 너비 */
+  margin: 20px auto; /* 중앙 정렬 */
+  background-color: #fff; /* 흰색 배경 */
+  border-radius: 8px; /* 모서리를 둥글게 */
+  padding: 20px; /* 내부 여백 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  text-align: center; /* 내부 텍스트 중앙 정렬 */
+  box-sizing: border-box; /* padding과 border 포함한 크기 */
+}
+
+/* 🌟 입력 폼 스타일 (제목, 내용) */
+.input-group-writeform {
+  margin-bottom: 15px; /* 아래 여백 추가 */
+  text-align: left; /* 왼쪽 정렬 */
+}
+
+.input-group-writeform label {
+  display: block; /* 블록 요소로 배치 */
+  font-weight: bold; /* 글씨를 굵게 */
+  margin-bottom: 5px; /* 라벨과 입력 필드 사이 간격 */
+}
+
+/* 제목과 내용 입력 필드 스타일 */
+.title-input-writeform,
+.content-input-writeform {
+  width: 100%; /* 부모 요소 크기 100% */
+  padding: 8px; /* 내부 여백 */
+  font-size: 16px; /* 글자 크기 */
+  border: 1px solid #ccc; /* 테두리 */
+  border-radius: 5px; /* 모서리를 둥글게 */
+}
+
+.content-input-writeform {
+  min-height: 80px; /* 최소 높이 설정 */
+}
+
+/* 🌟 Post 버튼과 진척도 가져오기 버튼을 감싸는 컨테이너 */
+.post_writeform {
+  display: flex; /* 가로 배치 */
+  justify-content: center; /* 가로 중앙 정렬 */
+  align-items: center; /* 세로 중앙 정렬 */
+  gap: 20px; /* 버튼 간 여백 */
+  margin-top: 20px; /* 위쪽 여백 */
+}
+
+/* 🌟 Post 버튼 (마지막 버튼을 검은색으로 설정) */
+.post_writeform > button:last-child {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+/* 🌟 진척도 가져오기 버튼 스타일 */
+.progress-button-writeform {
+  width: 160px; /* 버튼 너비 */
+  height: 45px; /* 버튼 높이 */
+  background-color: #ffe600; /* 노란색 배경 */
+  color: black; /* 검은색 글씨 */
+  border: none; /* 테두리 제거 */
+  padding: 10px 15px; /* 내부 여백 */
+  font-size: 16px; /* 글자 크기 */
+  font-weight: bold; /* 글씨 굵게 */
+  border-radius: 5px; /* 모서리를 둥글게 */
+  cursor: pointer; /* 마우스 포인터 변경 */
+  margin-bottom: 20px; /* 아래 여백 */
+}
+
+/* 🌟 버튼 hover 효과 */
+.progress-button-writeform:hover {
+  background-color: #ffdb3a;
+}
+
+/* 🌟 진척도 박스들을 가로로 배치하는 컨테이너 */
+.progress_container {
+  display: flex; /* 가로 정렬 */
+  justify-content: center; /* 가운데 정렬 */
+  align-items: flex-start; /* 상단 정렬 */
+  gap: 20px; /* 두 개 박스 사이 간격 */
+  margin-top: 20px; /* 위쪽 여백 */
+}
+
+/* 🌟 개별 진척도 박스 스타일 */
+.progress_box_writeform {
+  background: #121212; /* 검은색 배경 */
+  border-radius: 15px; /* 모서리 둥글게 */
+  padding: 30px; /* 내부 여백 */
+  color: white; /* 흰색 글씨 */
+  margin: 20px auto; /* 중앙 정렬 */
+  margin-top: 130px; /* 위쪽 여백 */
+  max-width: 400px; /* 최대 너비 설정 */
+  text-align: center; /* 내부 글씨 중앙 정렬 */
+}
+
+/* 🌟 녹색 바 스타일 */
+.progress_bar_outer_writeform {
+  width: 100%; /* 전체 너비 */
+  background: #fff; /* 흰색 배경 */
+  border-radius: 10px; /* 모서리 둥글게 */
+  padding: 5px; /* 내부 여백 */
+  margin-bottom: 10px; /* 아래쪽 여백 */
+}
+
+.progress_bar_inner_writeform {
+  background: #2bb51f; /* 초록색 배경 */
+  border-radius: 10px; /* 모서리 둥글게 */
+  padding: 10px; /* 내부 여백 */
+  color: black; /* 검은색 글씨 */
+  font-weight: bold; /* 글씨 굵게 */
+  text-align: center; /* 중앙 정렬 */
+}
+
+/* 🌟 체크박스 스타일 (진척도 박스 안에서 배치) */
+.progress_checkbox {
+  position: absolute; /* 절대 위치 지정 */
+  top: 10px; /* 상단 여백 */
+  left: 10px; /* 좌측 여백 */
+  width: 20px; /* 체크박스 크기 */
+  height: 20px;
+}
+
+/* 🌟 닫기 버튼 스타일 */
+.close_button_writeform {
+  background-color: black;
+  color: #fff;
+  border: none;
+  padding: 14px 45px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.close_button_writeform:hover {
+  background-color: #4b4b4b;
+}
+
+/* 🌟 Post 버튼 스타일 */
+.post_button_writeform {
+  background-color: #ffe600;
+  color: black;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.post_button_writeform:hover {
+  background-color: #fff16f;
+}
+
+/* 🌟 주간 진척도 박스 스타일 */
+.weekly_progress_box_writeform {
+  width: 50%;
+  max-width: 450px;
+  background: #121212;
+  border-radius: 15px;
+  padding: 20px;
+  color: white;
+  text-align: center;
+  margin: 20px auto;
+  max-width: 600px;
+}
+
+/* 🌟 주간 진척도 리스트 스타일 */
+.weekly_progress_list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* 🌟 개별 주간 진척도 항목 스타일 */
+.weekly_progress_item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+/* 날짜 스타일 */
+.weekly_progress_item span {
+  width: 50px;
+  text-align: center;
+  color: white;
+  font-size: 14px;
+}
+
+/* 전체 바 스타일 */
+.progress_bar_outer {
+  width: 100%;
+  background: white;
+  border-radius: 10px;
+  padding: 5px;
+  position: relative;
+}
+
+/* 채워지는 바 스타일 */
+.progress_bar_inner {
+  border-radius: 15px;
+  height: 25px;
+  text-align: center;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 🌟 색상 설정 */
+.red {
+  background: #f35c41;
+}
+
+.yellow {
+  background: #f4cc3a;
+}
+
+.green {
+  background: #2bb51f;
+}
+
+/* 🌟 버튼을 감싸는 컨테이너 */
+.button_container_writeform {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* 🌟 닫기 & Post 버튼 크기 통일 */
+.close_button_writeform,
+.post_button_writeform {
+  width: 120px;
+  height: 50px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-weight: bold;
+  border: none;
+  margin: 0;
+  padding: 0;
+}

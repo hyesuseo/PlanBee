@@ -3,6 +3,7 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.pj.planbee.mapper.UserMapper">
+
     <resultMap type="com.pj.planbee.dto.UserDTO" id="user">
         <id property="userId" column="user_id"/>
         <result property="userPw" column="user_pw"/>
@@ -11,20 +12,25 @@
         <result property="userPhone" column="user_phone"/>
     </resultMap>
     
+    <!-- 회원가입 -->
     <insert id="insertUser">
-        INSERT INTO Real_User (user_id, user_pw, user_name, user_email, user_phone) 
+        INSERT INTO real_user (user_id, user_pw, user_name, user_email, user_phone) 
         VALUES (#{tempUserId}, #{tempUserPw}, #{tempUserName}, #{tempUserEmail}, #{tempUserPhone})
     </insert>
     
+    <!-- ID 중복 체크 -->
     <select id="countUserId" resultType="int">
-        SELECT COUNT(*) FROM Real_User WHERE user_id = #{tempUserId}
+        SELECT COUNT(*) FROM real_user WHERE user_id = #{tempUserId}
     </select>
     
+    <!-- 이메일 중복 체크 -->
     <select id="countUserEmail" resultType="int">
-        SELECT COUNT(*) FROM Real_User WHERE user_email = #{tempUserEmail}
+        SELECT COUNT(*) FROM real_user WHERE user_email = #{tempUserEmail}
     </select>
-    
+
+    <!-- (선택사항) 안전 업데이트 해제 -->
     <update id="disableSafeUpdates">
-    	SET SQL_SAFE_UPDATES = 0;
-	</update>
+        SET SQL_SAFE_UPDATES = 0
+    </update>
+
 </mapper>

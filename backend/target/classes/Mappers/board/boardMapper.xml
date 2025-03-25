@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pj.planbee.mapper.BoardMapper">
+
+    <resultMap type="com.pj.planbee.dto.BoardDTO" id="boardList">
+        <id property="postId" column="post_id" />
+        <result property="postTitle" column="post_title" />
+        <result property="postHit" column="post_hit" />
+        <result property="postContent" column="post_content" />
+        <result property="postDate" column="post_date" />
+        <result property="userId" column="user_id" />
+        <result property="groupId" column="group_id" />
+    </resultMap>
+
+    <resultMap type="com.pj.planbee.dto.PostListDTO" id="postList">
+        <id property="postId" column="post_id" />
+        <result property="postTitle" column="post_title" />
+        <result property="postHit" column="post_hit" />
+        <result property="postDate" column="post_date" />
+        <result property="userId" column="user_id" />
+    </resultMap>
+
+    <select id="getAllList" resultMap="boardList">
+        SELECT post_id, post_title, post_hit, post_content,
+        DATE_FORMAT(post_date, '%Y-%m-%d %H:%i') AS post_date,
+        user_id, group_id
+        FROM Posts
+        ORDER BY post_date DESC
+    </select>
+
+    <select id="getAllPost" resultMap="postList">
+        SELECT post_id, post_title, post_hit, post_content,
+        DATE_FORMAT(post_date, '%Y-%m-%d %H:%i') AS post_date,
+        user_id, group_id
+        FROM Posts
+        WHERE group_id = #{groupId}
+        ORDER BY post_date DESC
+    </select>
+
+    <select id="getView" resultMap="boardList">
+        SELECT post_id, post_title, post_hit, post_content,
+        DATE_FORMAT(post_date, '%Y-%m-%d %H:%i') AS post_date,
+        user_id, group_id
+        FROM Posts
+        WHERE post_id = #{postId}
+        ORDER BY post_date DESC
+    </select>
+
+    <insert id="writePost">
+        INSERT INTO Posts (post_title, post_hit, post_content, user_id, group_id)
+        VALUES (#{postTitle}, 0, #{postContent}, #{userId}, #{groupId})
+    </insert>
+
+    <!-- 이 insertPost는 사용 안 되는 board 테이블을 참조하므로 주석 처리 추천 -->
+    <!--
+    <insert id="insertPost">
+        INSERT INTO board (group_id, user_id, post_title, post_content, post_hit)
+        VALUES (#{groupId}, #{userId}, #{postTitle}, #{postContent}, 0)
+    </insert>
+    -->
+
+    <update id="boardModify">
+        UPDATE Posts
+        SET post_title = #{postTitle}, post_content = #{postContent}, group_id = #{groupId}
+        WHERE post_id = #{postId}
+    </update>
+
+    <delete id="boardDel">
+        DELETE FROM Posts WHERE post_id = #{postId}
+    </delete>
+
+    <update id="boardHit">
+        UPDATE Posts SET post_hit = post_hit + 1 WHERE post_id = #{postId}
+    </update>
+
+    <select id="getWriter">
+        SELECT user_id FROM Posts WHERE post_id = #{postId}
+    </select>
+
+    <select id="boardUser" resultMap="postList">
+        SELECT post_id, post_title, post_hit,
+        DATE_FORMAT(post_date, '%Y-%m-%d %H:%i') AS post_date, user_id
+        FROM Posts
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="groupSearch">
+        SELECT group_id FROM Group_Members WHERE user_id = #{sessionId}
+    </select>
+
+    <select id="contentSearch" resultMap="postList">
+        SELECT post_id, post_title, post_hit,
+        DATE_FORMAT(post_date, '%Y-%m-%d %H:%i') AS post_date, user_id
+        FROM Posts
+        WHERE group_id = #{groupId} AND post_content LIKE CONCAT('%', #{content}, '%')
+    </select>
+
+    <select id="titleSearch" resultMap="postList">
+        SELECT post_id, post_title, post_hit,
+        DATE_FORMAT(post_date, '%Y-%m-%d %H:%i') AS post_date, user_id
+        FROM Posts
+        WHERE group_id = #{groupId} AND post_title LIKE CONCAT('%', #{content}, '%')
+    </select>
+
+    <select id="titleAndContentSearch" resultMap="postList">
+        SELECT post_id, post_title, post_hit,
+        DATE_FORMAT(post_date, '%Y-%m-%d %H:%i') AS post_date, user_id
+        FROM Posts
+        WHERE group_id = #{groupId}
+          AND (post_title LIKE CONCAT('%', #{content}, '%')
+           OR post_content LIKE CONCAT('%', #{content}, '%'))
+    </select>
+
+    <select id="boardGroup" resultMap="postList">
+        SELECT post_id, post_title, post_hit,
+        DATE_FORMAT(post_date, '%Y-%m-%d %H:%i') AS post_date, user_id
+        FROM Posts
+        WHERE group_id = #{groupId}
+        ORDER BY post_date DESC
+    </select>
+
+    <select id="maxHit" resultMap="postList">
+        SELECT post_id, post_title, post_hit,
+        DATE_FORMAT(post_date, '%Y-%m-%d %H:%i') AS post_date, user_id
+        FROM Posts
+        WHERE group_id = #{groupId}
+        ORDER BY post_hit DESC, post_date DESC
+    </select>
+
+    <select id="newestSort" resultMap="postList">
+        SELECT post_id, post_title, post_hit,
+        DATE_FORMAT(post_date, '%Y-%m-%d %H:%i') AS post_date, user_id
+        FROM Posts
+        WHERE group_id = #{groupId}
+        ORDER BY post_date DESC
+    </select>
+
+    <select id="oldestSort" resultMap="postList">
+        SELECT post_id, post_title, post_hit,
+        DATE_FORMAT(post_date, '%Y-%m-%d %H:%i') AS post_date, user_id
+        FROM Posts
+        WHERE group_id = #{groupId}
+        ORDER BY post_date ASC
+    </select>
+
+    <select id="getGroupName" resultType="String">
+        SELECT group_name FROM `Group` WHERE group_id = #{groupId}
+    </select>
+
+    <select id="getGroupMemberCount" resultType="int">
+        SELECT COUNT(*) FROM Group_Members WHERE group_id = #{groupId}
+    </select>
+
+    <select id="getGroupNameWithUserId" resultType="String">
+        SELECT g.group_name
+        FROM `Group` g
+        JOIN Group_Members gm ON g.group_id = gm.group_id
+        WHERE gm.user_id = #{userId}
+    </select>
+
+    <select id="getGroupMemberCountWithUserId" resultType="int">
+        SELECT COUNT(*)
+        FROM Group_Members
+        WHERE group_id = (
+            SELECT group_id FROM Group_members WHERE user_id = #{userId}
+        )
+    </select>
+
+    <select id="getLatestPostIdByUser" resultType="int">
+        SELECT post_id FROM Posts
+        WHERE user_id = #{userId}
+        ORDER BY post_date DESC
+        LIMIT 1
+    </select>
+
+</mapper>

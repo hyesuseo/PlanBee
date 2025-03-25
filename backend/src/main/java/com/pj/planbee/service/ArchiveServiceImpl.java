@@ -1,8 +1,5 @@
 package com.pj.planbee.service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +43,16 @@ public class ArchiveServiceImpl implements ArchiveService {
     @Override
     public List<ArchiveDTO> searchByDetail(String userId, String keyword) {
         return mapper.searchByDetail(userId, keyword);
+    }
+    
+    @Override
+    public List<ArchiveDTO> searchArchives(String userId, String searchType, String query) {
+        if ("date".equalsIgnoreCase(searchType)) {
+            return searchArchivesByDate(userId, query);
+        } else if ("content".equalsIgnoreCase(searchType)) {
+            return searchByDetail(userId, query);
+        } else {
+            throw new IllegalArgumentException("유효하지 않은 searchType 입니다. 'date' 또는 'content'를 사용하세요.");
+        }
     }
 }

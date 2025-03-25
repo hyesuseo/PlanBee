@@ -38,7 +38,7 @@ public interface TodoListService {
 	
 	//12시가 되면 todolist를 archive로 옮기는 기능들
 	public int saveArchive();
-	//public int saveArchiveDetail();
+	public int saveArchiveDetail();
 	
 
 }

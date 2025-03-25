@@ -11,4 +11,5 @@ public interface ArchiveMapper {
 	 List<ArchiveDTO> getPagedArchives(@Param("userId") String userId, @Param("offset") int offset, @Param("limit") int limit);
 	 List<ArchiveDTO> findArchivesByDate(@Param("userId") String userId, @Param("date") String date);
 	 List<ArchiveDTO> searchByDetail(@Param("userId") String userId, @Param("keyword") String keyword);
+	 
 }

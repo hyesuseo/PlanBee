@@ -3,6 +3,7 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.pj.planbee.mapper.TempUserMapper">
+
     <resultMap type="com.pj.planbee.dto.TempUserDTO" id="tempuser">
         <id property="tempUserId" column="tempuser_id" />
         <result property="tempUserPw" column="tempuser_pw" />
@@ -15,43 +16,43 @@
 
     <!-- user_id 중복 확인 -->
     <select id="countUserId" resultType="int">
-        SELECT COUNT(*) FROM Real_User WHERE user_id = #{tempUserId}
+        SELECT COUNT(*) FROM real_user WHERE user_id = #{tempUserId}
     </select>
 
     <!-- user_email 중복 확인 -->
     <select id="countUserEmail" resultType="int">
-        SELECT COUNT(*) FROM Real_User WHERE user_email = #{tempUserEmail}
+        SELECT COUNT(*) FROM real_user WHERE user_email = #{tempUserEmail}
     </select>
 
-    <!-- 특정 이메일을 기준으로 Temp_User 조회 -->
+    <!-- 특정 이메일을 기준으로 temp_user 조회 -->
     <select id="getTempUserByEmail" resultMap="tempuser">
-        SELECT * FROM Temp_User WHERE tempuser_email = #{tempUserEmail}
+        SELECT * FROM temp_user WHERE tempuser_email = #{tempUserEmail}
     </select>
 
-    <!-- 전체 Temp_User 조회 -->
+    <!-- 전체 temp_user 조회 -->
     <select id="getTempUser" resultMap="tempuser">
-        SELECT * FROM Temp_User
+        SELECT * FROM temp_user
     </select>
 
-    <!-- 특정 tempUserId로 Temp_User 조회 -->
+    <!-- 특정 tempUserId로 temp_user 조회 -->
     <select id="getTempUserData" resultMap="tempuser">
-        SELECT * FROM Temp_User WHERE tempuser_id = #{tempUserId}
+        SELECT * FROM temp_user WHERE tempuser_id = #{tempUserId}
     </select>
 
-    <!-- Temp_User 삽입 -->
+    <!-- temp_user 삽입 -->
     <insert id="insertTempUser">
-        INSERT INTO Temp_User (tempuser_id, tempuser_pw, tempuser_name, tempuser_email, tempuser_phone, tempuser_code, verify_status)
+        INSERT INTO temp_user (tempuser_id, tempuser_pw, tempuser_name, tempuser_email, tempuser_phone, tempuser_code, verify_status)
         VALUES (#{tempUserId}, #{tempUserPw}, #{tempUserName}, #{tempUserEmail}, #{tempUserPhone}, #{tempUserCode}, COALESCE(#{verifyStatus}, 0))
     </insert>
 
     <!-- 이메일 존재 여부 확인 -->
     <select id="checkTempUserExists" resultType="int">
-        SELECT COUNT(*) FROM Temp_User WHERE tempuser_email = #{tempUserEmail}
+        SELECT COUNT(*) FROM temp_user WHERE tempuser_email = #{tempUserEmail}
     </select>
 
     <!-- 기존 데이터가 있을 경우 업데이트 -->
     <update id="updateTempUser">
-        UPDATE Temp_User
+        UPDATE temp_user
         SET tempuser_id = #{tempUserId},
             tempuser_pw = #{tempUserPw},
             tempuser_name = #{tempUserName},
@@ -61,34 +62,35 @@
         WHERE tempuser_email = #{tempUserEmail}
     </update>
 
-    <!-- Temp_User 삭제 -->
+    <!-- temp_user 삭제 -->
     <delete id="deleteTempUser">
-        DELETE FROM Temp_User WHERE tempuser_email = #{tempUserEmail}
+        DELETE FROM temp_user WHERE tempuser_email = #{tempUserEmail}
     </delete>
 
-    <!-- 특정 이메일에 해당하는 tempuser_code 조회 -->
+    <!-- 인증 코드 조회 -->
     <select id="getTempUserCode" resultType="String">
-        SELECT tempuser_code FROM Temp_User WHERE tempuser_email = #{tempUserEmail}
+        SELECT tempuser_code FROM temp_user WHERE tempuser_email = #{tempUserEmail}
     </select>
 
-    <!-- 인증 성공 시 verify_status 업데이트 -->
+    <!-- 인증 성공 시 상태 변경 -->
     <update id="updateVerifyStatus">
-        UPDATE Temp_User
+        UPDATE temp_user
         SET verify_status = 1
         WHERE tempuser_email = #{tempUserEmail}
     </update>
 
-    <!-- 특정 이메일의 verify_status 조회 -->
+    <!-- 인증 상태 확인 -->
     <select id="getVerifyStatus" resultType="Integer">
-        SELECT verify_status FROM Temp_User WHERE tempuser_email = #{tempUserEmail}
+        SELECT verify_status FROM temp_user WHERE tempuser_email = #{tempUserEmail}
     </select>
 
-    <!-- 만료된 Temp_User 삭제 -->
+    <!-- 만료된 사용자 삭제 -->
     <delete id="deleteExpiredTempUsers">
         <![CDATA[
-        DELETE FROM Temp_User
+        DELETE FROM temp_user
         WHERE verify_status = 0 
-        AND created_at < NOW() - INTERVAL 5 MINUTE;
+        AND created_at < NOW() - INTERVAL 5 MINUTE
         ]]>
     </delete>
+
 </mapper>

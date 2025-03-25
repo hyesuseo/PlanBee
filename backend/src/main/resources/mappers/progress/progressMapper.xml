@@ -1,0 +1,92 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pj.planbee.mapper.ProgressMapper">
+
+    <resultMap id="userProgressMap" type="com.pj.planbee.dto.UserProgressDTO">
+        <result property="userId" column="user_id" />
+        <result property="progress" column="progress" />
+    </resultMap>
+
+    <!-- 특정 사용자의 특정 날짜의 총 할 일 개수 조회 -->
+    <select id="getTotalTasks" resultType="int">
+        SELECT COUNT(*)
+        FROM ToDoList t
+        JOIN ToDoList_Detail d ON t.todo_id = d.todo_id
+        WHERE t.user_id = #{userId}
+          AND DATE_FORMAT(t.todo_date, '%y%m%d') = #{date}
+    </select>
+
+    <!-- 완료된 할 일 개수 -->
+    <select id="getCompletedTasks" resultType="int">
+        SELECT COUNT(*)
+        FROM ToDoList t
+        JOIN ToDoList_Detail d ON t.todo_id = d.todo_id
+        WHERE t.user_id = #{userId}
+          AND DATE_FORMAT(t.todo_date, '%y%m%d') = #{date}
+          AND d.tododetail_state = 1
+    </select>
+
+    <!-- 주간 진척도 -->
+    <select id="getWeeklyProgress" resultType="map">
+        SELECT t.todo_date,
+               COUNT(*) AS total_tasks,
+               SUM(CASE WHEN d.tododetail_state = 1 THEN 1 ELSE 0 END) AS completed_tasks
+        FROM ToDoList t
+        JOIN ToDoList_Detail d ON t.todo_id = d.todo_id
+        WHERE t.user_id = #{userId}
+          AND t.todo_date BETWEEN #{startDate} AND #{endDate}
+        GROUP BY t.todo_date
+        ORDER BY t.todo_date ASC
+    </select>
+
+    <!-- 그룹별 월간 평균 진척도 조회 -->
+    <select id="getGroupMonthlyProgressRanking" resultMap="userProgressMap">
+        SELECT gm.user_id,
+               ROUND(AVG(td.todo_progress), 2) AS progress
+        FROM Group_Members gm
+        JOIN ToDoList td ON gm.user_id = td.user_id
+        WHERE gm.group_id = #{groupId}
+          AND td.todo_date LIKE CONCAT(#{yyMM}, '%')
+        GROUP BY gm.user_id
+        ORDER BY progress DESC
+    </select>
+
+    <!-- 그룹 내 최대 스트릭 계산 -->
+    <select id="getGroupMaxStreaks" resultType="map">
+        SELECT td.user_id, MAX(td.streak_days) AS streakDays
+        FROM (
+            SELECT user_id, COUNT(*) AS streak_days
+            FROM (
+                SELECT t.user_id, t.todo_date,
+                       DATEDIFF(t.todo_date, LAG(t.todo_date)
+                       OVER (PARTITION BY t.user_id ORDER BY t.todo_date)) = 1 AS is_streak
+                FROM ToDoList t
+                JOIN Group_Members gm ON t.user_id = gm.user_id
+                WHERE gm.group_id = #{groupId}
+            ) AS sub
+            WHERE is_streak = 1
+            GROUP BY user_id
+        ) AS td
+        GROUP BY td.user_id
+        ORDER BY streakDays DESC
+    </select>
+
+    <!-- 그룹 내 현재 스트릭 계산 -->
+    <select id="getGroupCurrentStreaks" resultType="map">
+        SELECT t.user_id, COUNT(*) AS streakDays
+        FROM (
+            SELECT t.user_id, t.todo_date,
+                   DATEDIFF(t.todo_date, LAG(t.todo_date)
+                   OVER (PARTITION BY t.user_id ORDER BY t.todo_date)) = 1 AS is_streak
+            FROM ToDoList t
+            JOIN Group_Members gm ON t.user_id = gm.user_id
+            WHERE gm.group_id = #{groupId}
+        ) AS t
+        WHERE is_streak = 1
+        GROUP BY t.user_id
+        ORDER BY streakDays DESC
+    </select>
+
+</mapper>

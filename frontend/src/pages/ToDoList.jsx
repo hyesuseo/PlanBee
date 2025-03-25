@@ -12,35 +12,6 @@ const ToDoList = () => {
   const [progress, setProgress] = useState(null);
 
   useEffect(() => {
-    const makeSession = async () => {
-      try {
-        const response = await axios.post(
-          `http://localhost:8080/planbee/todolist/makeSession`,
-          null, // POST 요청 시 body를 전달할 필요 없으면 null
-          {
-            withCredentials: true, // 쿠키 전송을 허용
-          }
-        );
-        console.log("세션 요청 여부:", response.data);
-        checkSession();
-      } catch (error) {
-        console.error("세션 fetching 실패!", error);
-      }
-    };
-
-    const checkSession = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/planbee/todolist/checkSession`,
-          {
-            withCredentials: true,
-          }
-        );
-        console.log("세션 확인 :", response.data);
-      } catch (error) {
-        console.error("에러", error);
-      }
-    };
     const fetchPercent = async () => {
       try {
         const response = await axios.get(
@@ -52,11 +23,9 @@ const ToDoList = () => {
         setProgress(response.data);
         console.log("진척도", response.data);
       } catch (error) {
-        console.error("에러다", error);
+        console.error("진척도 관련 에러 발생", error);
       }
     };
-
-    makeSession();
     fetchPercent();
   }, []);
 

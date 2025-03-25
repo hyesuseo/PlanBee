@@ -36,19 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CalendarController {
 
     @Autowired CalendarService cs;
-    
-    @PostMapping(value="/makeSession", produces = "application/json; charset=utf-8")//세션 설정 메소드
-    public int session(HttpSession se) { 
-       se.setAttribute("sessionId", "팥붕");
-       return 1;
-       
-    }
-    
-     @GetMapping(value = "/checkSession", produces = "application/json; charset=utf-8") // 로그인 상태 확인
-     public int checkSession(HttpSession session) { //세션체크 -찬교님 코드 참고함
-         return (session.getAttribute("sessionId") != null) ? 1 : 0; // 1: 로그인된 상태, 0: 로그인되지 않음
-     }
-    
+  
     //일별 진척도
      @GetMapping(value="/dprogress/{calDate}", produces = "application/json;charset=UTF-8") //날짜를 가져와서 일별 진척도를 확인
      public double getProgress(@PathVariable String calDate, HttpSession session) {
@@ -118,7 +106,6 @@ public class CalendarController {
              ));
      }
 
-
     //메모추가
     @PostMapping(value="/addmemo/{calDate}", produces="application/json;charset=UTF-8")
     // CalendarDTO 객체에 날짜(calDate)와 사용자 아이디를 설정한 후, DB에 메모를 저장
@@ -129,14 +116,15 @@ public class CalendarController {
         return cs.addMemo(calendar);
     }
 
-
-    
     //메모 수정
     @PutMapping("/modimemo/{calId}")
     public int modiMemo(@PathVariable int calId, @RequestBody CalendarDTO calendar) {
     	 // 수정할 메모의 식별자를 CalendarDTO에 설정
+    	System.out.println("memoPut: 요청들어옴");
     	 calendar.setCalId(calId);
+    	System.out.println("calID:" + calId);
     	int result = cs.modiMemo(calendar);
+    	System.out.println("결과값: "+ result);
     	return result;
     }
     
@@ -144,8 +132,6 @@ public class CalendarController {
     @DeleteMapping("/delmemo/{calId}/{fieldNo}")
     public int delMemo(@PathVariable int calId, @PathVariable int fieldNo) {
         return cs.delMemo(calId, fieldNo);
-       
     }
-    
 }
     

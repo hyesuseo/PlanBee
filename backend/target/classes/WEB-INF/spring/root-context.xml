@@ -7,13 +7,16 @@
 	
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
-	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
-		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
-		<property name="jdbcUrl" value="jdbc:mysql://planbee-db.c14y0yi620fv.ap-northeast-2.rds.amazonaws.com:3306/planbee?useSSL=false&amp;serverTimezone=Asia/Seoul&amp;allowPublicKeyRetrieval=true" />
-      	<property name="username" value="workingBee" />
-      	<property name="password" value="WorkingBee" />
-		<property name="leakDetectionThreshold" value="2000" />
-	</bean>
+<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+    <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+    <property name="jdbcUrl" value="jdbc:mysql://planbee-db.c14y0yi620fv.ap-northeast-2.rds.amazonaws.com:3306/planbee?useSSL=false&amp;serverTimezone=Asia/Seoul&amp;allowPublicKeyRetrieval=true" />
+    <property name="username" value="workingBee" />
+    <property name="password" value="WorkingBee" />
+    <property name="leakDetectionThreshold" value="2000" />
+    <property name="idleTimeout" value="600000" />
+    <property name="maxLifetime" value="1800000" />
+</bean>
+
 	
 	
 	<!-- 히카리 데이터소스 빈 등록 -->
@@ -21,43 +24,43 @@
 		<constructor-arg ref="hikariConfig" />
 	</bean>
 
-	<!-- <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig"> <property 
-		name="driverClassName" value="oracle.jdbc.driver.OracleDriver" /> <property 
-		name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521:orcl" /> <property 
-		name="username" value="c##eclip" /> <property name="password" value="1234" 
-		/> </bean> -->
+   <!-- <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig"> <property 
+      name="driverClassName" value="oracle.jdbc.driver.OracleDriver" /> <property 
+      name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521:orcl" /> <property 
+      name="username" value="c##eclip" /> <property name="password" value="1234" 
+      /> </bean> -->
 
-	<!-- 데이터소스 마이바티스에 등록 및 xml 위치 설정 -->
-	<bean id="sqlSessionFactory"
-		class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="ds" />
-		<property name="mapperLocations"
-			value="classpath:/mappers/**/*Mapper.xml" />
+   <!-- 데이터소스 마이바티스에 등록 및 xml 위치 설정 -->
+   <bean id="sqlSessionFactory"
+      class="org.mybatis.spring.SqlSessionFactoryBean">
+      <property name="dataSource" ref="ds" />
+      <property name="mapperLocations"
+         value="classpath:/mappers/**/*Mapper.xml" />
 
-	</bean>
-	<!-- JavaMailSender 설정 -->
-	<bean id="mailSender"
-		class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host" value="smtp.gmail.com" />
-		<property name="port" value="587" />
-		<property name="username" value="dlcksry0126@gmail.com" />
-		<property name="password" value="zwwv adkk flij jqdy" />
-		<property name="javaMailProperties">
-			<props>
-				<prop key="mail.transport.protocol">smtp</prop>
-				<prop key="mail.smtp.auth">true</prop>
-				<prop key="mail.smtp.starttls.enable">true</prop>
-				<prop key="mail.smtp.starttls.required">true</prop>
-				<prop key="mail.smtp.ssl.protocols">TLSv1.2</prop>
-				<prop key="mail.smtp.ssl.trust">smtp.gmail.com</prop>
-				<prop key="mail.debug">true</prop>
-			</props>
-		</property>
-	</bean>
+   </bean>
+   <!-- JavaMailSender 설정 -->
+   <bean id="mailSender"
+      class="org.springframework.mail.javamail.JavaMailSenderImpl">
+      <property name="host" value="smtp.gmail.com" />
+      <property name="port" value="587" />
+      <property name="username" value="dlcksry0126@gmail.com" />
+      <property name="password" value="zwwv adkk flij jqdy" />
+      <property name="javaMailProperties">
+         <props>
+            <prop key="mail.transport.protocol">smtp</prop>
+            <prop key="mail.smtp.auth">true</prop>
+            <prop key="mail.smtp.starttls.enable">true</prop>
+            <prop key="mail.smtp.starttls.required">true</prop>
+            <prop key="mail.smtp.ssl.protocols">TLSv1.2</prop>
+            <prop key="mail.smtp.ssl.trust">smtp.gmail.com</prop>
+            <prop key="mail.debug">true</prop>
+         </props>
+      </property>
+   </bean>
 
-	<!-- 마이바티스 xml파일과 dao빈 연결 -->
-	<mybatis-spring:scan
-		base-package="com.pj.planbee.mapper" />
-		
-		
+   <!-- 마이바티스 xml파일과 dao빈 연결 -->
+   <mybatis-spring:scan
+      base-package="com.pj.planbee.mapper" />
+      
+      
 </beans>

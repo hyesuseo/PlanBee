@@ -8,5 +8,6 @@ public interface ArchiveService {
 
 	List<ArchiveDTO> getPagedArchives(String userId, int offset, int limit);
     List<ArchiveDTO> searchArchivesByDate(String userId, String date);
-    List<ArchiveDTO> searchByDetail(String userId, String keyword);	
+    List<ArchiveDTO> searchByDetail(String userId, String searchType);	
+    List<ArchiveDTO> searchArchives(String userId, String searchType, String query);
 }

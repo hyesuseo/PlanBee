@@ -20,6 +20,8 @@ public interface SaveArchiveMapper {
 	
 	public List<Integer> tdIdSearch(String yesterday);
 	
+	public int getArchId(String yesterday);
+	
 	public ArrayList<TDdetailDTO> todoDetailCheck(@Param("tdIds")int tdIds);
 	
 	public ArrayList<TDdetailDTO> checkExist(int tdDetailId);
