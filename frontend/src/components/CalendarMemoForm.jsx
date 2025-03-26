@@ -37,7 +37,7 @@ const CalendarMemoForm = ({
     const getUserId = async () => {
       try {
         const response = await axios.get(
-          `http://43.200.100.158:8080/planbee/auth/getUserId`,
+          `https://43.200.100.158:8080/planbee/auth/getUserId`,
           {
             withCredentials: true,
           }
@@ -64,7 +64,7 @@ const CalendarMemoForm = ({
     try {
       // POST 요청으로 메모 추가
       const response = await axios.post(
-        `http://43.200.100.158:8080/planbee/calendar/addmemo/${calDate}`,
+        `https://43.200.100.158:8080/planbee/calendar/addmemo/${calDate}`,
         requestData,
         { withCredentials: true }
       );
@@ -93,7 +93,7 @@ const CalendarMemoForm = ({
     try {
       // PUT 요청으로 메모 수정
       const response = await axios.put(
-        `http://43.200.100.158:8080/planbee/calendar/modimemo/${calId}`,
+        `https://43.200.100.158:8080/planbee/calendar/modimemo/${calId}`,
         requestData,
         { withCredentials: true }
       );
@@ -115,7 +115,7 @@ const CalendarMemoForm = ({
 
     try {
       await axios.delete(
-        `http://43.200.100.158:8080/planbee/calendar/delmemo/${calId}/${fieldNo}`,
+        `https://43.200.100.158:8080/planbee/calendar/delmemo/${calId}/${fieldNo}`,
         { withCredentials: true }
       );
       console.log(`${fieldNo}번 메모 삭제 성공`);
