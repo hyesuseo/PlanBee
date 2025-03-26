@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
-import Banner from './Banner';
-import SideBar from './SideBar';
-import { option } from 'framer-motion/client';
-import '../css/BoardList.css';
-import Board from '../pages/Board';
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import Banner from "./Banner";
+import SideBar from "./SideBar";
+import { option } from "framer-motion/client";
+import "../css/BoardList.css";
+import Board from "../pages/Board";
 
 const BoardListCom = ({ Info: infoFromProps }) => {
   // props로 전달된 Info가 있으면 사용하고, 없으면 location.state 사용
@@ -24,15 +24,15 @@ const BoardListCom = ({ Info: infoFromProps }) => {
   const navigate = useNavigate();
   const [requestUrl, setRequestUrl] = useState(Info.redirectUrl); // 리다이렉트되는 URL 저장
   const [thisGroupId, setThisGroupId] = useState(Info.groupId); // 그룹 아이디 저장
-  const [thisGroupName, setThisGroupName] = useState(''); // 그룹 이름 저장
-  const [thisGroupCount, SetThisGroupCount] = useState(''); // 그룹 인원수 저장
+  const [thisGroupName, setThisGroupName] = useState(""); // 그룹 이름 저장
+  const [thisGroupCount, SetThisGroupCount] = useState(""); // 그룹 인원수 저장
   const [board, setBoard] = useState(null); // 게시글 목록 저장
   const [currentTeam, SetCurrentTeam] = useState("joinedGroup");
 
   // 게시글 수정을 위한 변수 선언
   const [isEditing, setIsEditing] = useState(false);
-  const [postTitle, setPostTitle] = useState('');
-  const [postContent, setPostContent] = useState('');
+  const [postTitle, setPostTitle] = useState("");
+  const [postContent, setPostContent] = useState("");
 
   // 검색 관련 변수: 검색 기준은 "제목" 또는 "내용"
   const [searchType, setSearchType] = useState("제목");
@@ -45,17 +45,26 @@ const BoardListCom = ({ Info: infoFromProps }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  const fetchBoardList = async () => { // 게시판 글 가져오는 기능
+  const fetchBoardList = async () => {
+    // 게시판 글 가져오는 기능
     try {
-      const response = await axios.get(`http://localhost:8080/${requestUrl}`, {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `http://43.200.100.158:8080/${requestUrl}`,
+        {
+          withCredentials: true,
+        }
+      );
       console.log({ thisGroupId }, "의 게시글목록: ", response.data);
       if (response.data && response.data.posts) {
         setBoard(response.data.posts);
         setThisGroupName(response.data.groupName);
         SetThisGroupCount(response.data.groupMemberCount);
-        console.log("이 그룹의 정보들", thisGroupName, "인원수:", thisGroupCount);
+        console.log(
+          "이 그룹의 정보들",
+          thisGroupName,
+          "인원수:",
+          thisGroupCount
+        );
       }
     } catch (error) {
       console.log("게시판 글가져오기 실패", error);
@@ -95,10 +104,11 @@ const BoardListCom = ({ Info: infoFromProps }) => {
   const handleSearchChange = (e) => setSearchTerm(e.target.value);
   const handleSearch = () => console.log(`검색어: ${searchTerm}`);
 
-  const exitGroup = async () => { // 그룹 탈퇴하는 코드
+  const exitGroup = async () => {
+    // 그룹 탈퇴하는 코드
     try {
       const response = await axios.post(
-        `http://localhost:8080/planbee/groups/${thisGroupId}/leave`,
+        `http://43.200.100.158:8080/planbee/groups/${thisGroupId}/leave`,
         {},
         {
           withCredentials: true,
@@ -112,10 +122,11 @@ const BoardListCom = ({ Info: infoFromProps }) => {
     }
   };
 
-  const fetchLatestBoard = async () => { // 최신순 정렬
+  const fetchLatestBoard = async () => {
+    // 최신순 정렬
     try {
       const response = await axios.get(
-        `http://localhost:8080/planbee/groups/${thisGroupId}/boards?sort=newest`,
+        `http://43.200.100.158:8080/planbee/groups/${thisGroupId}/boards?sort=newest`,
         { withCredentials: true }
       );
       console.log("최신순 정렬 결과", response.data);
@@ -125,10 +136,11 @@ const BoardListCom = ({ Info: infoFromProps }) => {
     }
   };
 
-  const fetchOldestBoard = async () => { // 오래된 순 정렬
+  const fetchOldestBoard = async () => {
+    // 오래된 순 정렬
     try {
       const response = await axios.get(
-        `http://localhost:8080/planbee/groups/${thisGroupId}/boards?sort=oldest`,
+        `http://43.200.100.158:8080/planbee/groups/${thisGroupId}/boards?sort=oldest`,
         { withCredentials: true }
       );
       console.log("오래된 순 정렬 결과:", response.data);
@@ -138,10 +150,11 @@ const BoardListCom = ({ Info: infoFromProps }) => {
     }
   };
 
-  const fetchMaxHitBoard = async () => { // 조회수 많은 순 정렬
+  const fetchMaxHitBoard = async () => {
+    // 조회수 많은 순 정렬
     try {
       const response = await axios.get(
-        `http://localhost:8080/planbee/groups/${thisGroupId}/boards?sort=hit`,
+        `http://43.200.100.158:8080/planbee/groups/${thisGroupId}/boards?sort=hit`,
         { withCredentials: true }
       );
       console.log("조회수 많은 순 정렬 결과:", response.data);
@@ -151,10 +164,11 @@ const BoardListCom = ({ Info: infoFromProps }) => {
     }
   };
 
-  const fetchSearchedBoard = async () => { // 검색어로 검색하는 코드 (검색 기준: searchType, 검색어: searchTerm)
+  const fetchSearchedBoard = async () => {
+    // 검색어로 검색하는 코드 (검색 기준: searchType, 검색어: searchTerm)
     try {
       const response = await axios.get(
-        `http://localhost:8080/planbee/groups/${thisGroupId}/boards?searchType=${searchType}&query=${searchTerm}`,
+        `http://43.200.100.158:8080/planbee/groups/${thisGroupId}/boards?searchType=${searchType}&query=${searchTerm}`,
         { withCredentials: true }
       );
       console.log("검색어:", searchTerm, "검색 기준:", searchType);
@@ -166,7 +180,7 @@ const BoardListCom = ({ Info: infoFromProps }) => {
   };
 
   const writePost = async () => {
-    navigate("/boardWrite", {state: thisGroupId});
+    navigate("/boardWrite", { state: thisGroupId });
   };
 
   return (
@@ -175,9 +189,7 @@ const BoardListCom = ({ Info: infoFromProps }) => {
       <div className="white_box">
         {/* 그룹 상단 바 */}
         <div className="group_top_bar">
-          <h2 className="group_name">
-            {thisGroupName ? thisGroupName : ""}
-          </h2>
+          <h2 className="group_name">{thisGroupName ? thisGroupName : ""}</h2>
           <div className="group_top_right">
             <span className="group_member_count">
               현재 인원 : {thisGroupCount ? thisGroupCount : "0"}
@@ -191,13 +203,22 @@ const BoardListCom = ({ Info: infoFromProps }) => {
               {sort}
               {isSearchOpen && (
                 <div className="search_dropdown_menu">
-                  <div className="dropdown_option" onClick={() => handleSearchOptionClick("최신순")}>
+                  <div
+                    className="dropdown_option"
+                    onClick={() => handleSearchOptionClick("최신순")}
+                  >
                     최신순
                   </div>
-                  <div className="dropdown_option" onClick={() => handleSearchOptionClick("오래된 순")}>
+                  <div
+                    className="dropdown_option"
+                    onClick={() => handleSearchOptionClick("오래된 순")}
+                  >
                     오래된 순
                   </div>
-                  <div className="dropdown_option" onClick={() => handleSearchOptionClick("조회수 많은 순")}>
+                  <div
+                    className="dropdown_option"
+                    onClick={() => handleSearchOptionClick("조회수 많은 순")}
+                  >
                     조회수 많은 순
                   </div>
                 </div>
@@ -208,10 +229,16 @@ const BoardListCom = ({ Info: infoFromProps }) => {
                 {searchType}
                 {isOpen && (
                   <div className="sort_dropdown visible">
-                    <div className="dropdown_option" onClick={() => handleOptionClick("제목")}>
+                    <div
+                      className="dropdown_option"
+                      onClick={() => handleOptionClick("제목")}
+                    >
                       제목
                     </div>
-                    <div className="dropdown_option" onClick={() => handleOptionClick("내용")}>
+                    <div
+                      className="dropdown_option"
+                      onClick={() => handleOptionClick("내용")}
+                    >
                       내용
                     </div>
                   </div>
@@ -225,7 +252,10 @@ const BoardListCom = ({ Info: infoFromProps }) => {
                   value={searchTerm}
                   onChange={handleSearchChange}
                 />
-                <div className="search_icon" onClick={() => fetchSearchedBoard()}>
+                <div
+                  className="search_icon"
+                  onClick={() => fetchSearchedBoard()}
+                >
                   <img src="../img/search_icon.png" alt="search icon" />
                 </div>
               </div>
@@ -234,27 +264,37 @@ const BoardListCom = ({ Info: infoFromProps }) => {
         </div>
         <hr className="group_black_line" />
         <div class="post_list">
-        {/* 게시글 목록 */}
-        {board ?.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "50px", marginTop: "20px" }}>
-            게시판에 글이 없습니다.
-          </div>
-        ) : (
-          <div className="post_list">
-            {board && board.map((item)=> (
-            <div key={item.postId} className="post_item">
-            <Link to={`/boardOne/${item.postId}`} state={{thisGroupId: thisGroupId}}>
-            <div className="post_text">{item.postTitle}</div></Link>
-            <div className="post_meta">
-            <span className="post_author">{item.userId}</span>
-            <span className="post_date">{item.postDate}</span>
-            <span className="post_views">조회수 {item.postHit}</span>
+          {/* 게시글 목록 */}
+          {board?.length === 0 ? (
+            <div
+              style={{
+                textAlign: "center",
+                padding: "50px",
+                marginTop: "20px",
+              }}
+            >
+              게시판에 글이 없습니다.
             </div>
-          </div>
-          ))}
-          </div>
-        )}
-
+          ) : (
+            <div className="post_list">
+              {board &&
+                board.map((item) => (
+                  <div key={item.postId} className="post_item">
+                    <Link
+                      to={`/boardOne/${item.postId}`}
+                      state={{ thisGroupId: thisGroupId }}
+                    >
+                      <div className="post_text">{item.postTitle}</div>
+                    </Link>
+                    <div className="post_meta">
+                      <span className="post_author">{item.userId}</span>
+                      <span className="post_date">{item.postDate}</span>
+                      <span className="post_views">조회수 {item.postHit}</span>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          )}
         </div>
         {/* 글쓰기 아이콘 */}
         <div className="write_icon" onClick={() => writePost()}>

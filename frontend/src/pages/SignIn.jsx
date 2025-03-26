@@ -26,28 +26,63 @@ const SignIn = () => {
   };
 
   const SendCode = async () => {
+    if (!userInfo || !userInfo.email) {
+      alert("이메일 정보를 입력해주세요.");
+      return;
+    }
+
     try {
-      console.log(userInfo);
+      console.log("전송할 사용자 정보:", userInfo);
       const response = await axios.post(
-        `http://localhost:8080/planbee/auth/email/send`,
+        `http://43.200.100.158:8080/planbee/auth/email/send`,
         userInfo
       );
-      console.log("인증코드 전송 성공!", response.data);
+
+      // response.data 값에 따라 분류
+      switch (response.data) {
+        case -2:
+          alert("이메일이 중복되었습니다.");
+          break;
+        case -1:
+          alert("아이디가 중복되었습니다.");
+          break;
+        case 1:
+          alert("인증코드가 이메일로 전송되었습니다!");
+          break;
+        case 0:
+          alert("오류가 발생하였습니다.");
+          break;
+        default:
+          alert("예상하지 못한 응답입니다.");
+      }
+
+      console.log("응답 데이터:", response.data);
     } catch (error) {
-      console.error("인증코드 전송 실패!", error);
+      console.error(
+        "인증코드 전송 실패!",
+        error.response ? error.response.data : error.message
+      );
+      alert(
+        `인증코드 전송 실패: ${
+          error.response ? error.response.data.message : "네트워크 오류"
+        }`
+      );
     }
   };
+
   const VerifyCode = async () => {
     try {
       console.log(userInfo, userCode);
       const dataToSend = { ...userInfo, tempUserCode: userCode };
       const response = await axios.post(
-        `http://localhost:8080/planbee/auth/email/verify`,
+        `http://43.200.100.158:8080/planbee/auth/email/verify`,
         dataToSend
       );
       console.log("인증 완료!", response.data);
+      alert("인증 완료!");
     } catch (error) {
       console.error("인증 실패!", error);
+      alert("인증 실패!");
     }
   };
   const SignUp = async () => {
@@ -55,12 +90,14 @@ const SignIn = () => {
       console.log(userInfo, userCode);
       const dataToSend = { ...userInfo, tempUserCode: userCode };
       const response = await axios.post(
-        `http://localhost:8080/planbee/auth/register`,
+        `http://43.200.100.158:8080/planbee/auth/register`,
         dataToSend
       );
       console.log("회원가입 완료!", response.data);
+      alert("회원가입 완료!");
       togglePopup();
     } catch (error) {
+      alert("회원가입 실패!");
       console.error("회원가입 실패!", error);
     }
   };
@@ -83,10 +120,11 @@ const SignIn = () => {
   const Login = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:8080/planbee/auth/login`,
+        `http://43.200.100.158:8080/planbee/auth/login`,
         loginData,
         { withCredentials: true }
       );
+      alert("로그인 완료!");
       console.log("로그인 완료!", response.data);
       navigate("/todolist");
       makeSession();
@@ -98,7 +136,7 @@ const SignIn = () => {
   const makeSession = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/planbee/auth/session`,
+        `http://43.200.100.158:8080/planbee/auth/session`,
         {
           withCredentials: true,
         }

@@ -1,14 +1,13 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { FaArrowLeft, FaEllipsisV } from 'react-icons/fa';
-import { useNavigate, useParams } from 'react-router-dom';
-import Banner from './Banner';
-import SideBar from './SideBar';
-import '../css/BoardOne.css';
-import ReplyInputCom from './ReplyInputCom';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { FaArrowLeft, FaEllipsisV } from "react-icons/fa";
+import { useNavigate, useParams } from "react-router-dom";
+import Banner from "./Banner";
+import SideBar from "./SideBar";
+import "../css/BoardOne.css";
+import ReplyInputCom from "./ReplyInputCom";
 
 const BoardOneCom = ({ thisPostId, thisGroupId }) => {
-  const sessionId = "팥붕"; // 하드코딩된 사용자 ID
   const navigate = useNavigate();
   const { postId } = useParams();
 
@@ -16,14 +15,36 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const [reply, setReply] = useState([]);
   const [comment, setComment] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-  const [editedPost, setEditedPost] = useState({ postTitle: "", postContent: "" });
+  const [editedPost, setEditedPost] = useState({
+    postTitle: "",
+    postContent: "",
+  });
   const [activeMenu, setActiveMenu] = useState(null);
   const [editingReplyId, setEditingReplyId] = useState(null);
   const [editingReplyContent, setEditingReplyContent] = useState("");
-  
+
   // 대댓글(댓글의 댓글) 관련 상태
   const [activeNestedReplyId, setActiveNestedReplyId] = useState(null);
   const [nestedReplyContent, setNestedReplyContent] = useState("");
+  const [sessionId, setSessionId] = useState(null);
+
+  useEffect(() => {
+    const getUserId = async () => {
+      try {
+        const response = await axios.get(
+          `http://43.200.100.158:8080/planbee/auth/getUserId`,
+          {
+            withCredentials: true,
+          }
+        );
+        console.log("유저 아이디 fetch 성공", response.data);
+        setSessionId(response.data);
+      } catch (error) {
+        console.error("유저 아이디 에러 발생", error);
+      }
+    };
+    getUserId();
+  }, []);
 
   useEffect(() => {
     if (thisPostId && thisGroupId) {
@@ -36,7 +57,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const fetchThisPost = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}`,
+        `http://43.200.100.158:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}`,
         { withCredentials: true }
       );
       setThisPost(response.data.post);
@@ -50,7 +71,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const handleHit = async () => {
     try {
       await axios.put(
-        `http://localhost:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/hit`,
+        `http://43.200.100.158:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/hit`,
         {},
         { withCredentials: true }
       );
@@ -67,7 +88,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const handleModifyingSave = async () => {
     try {
       await axios.put(
-        `http://localhost:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}`,
+        `http://43.200.100.158:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}`,
         {
           postTitle: editedPost.title,
           postContent: editedPost.contents,
@@ -91,14 +112,14 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
     if (window.confirm("삭제하시겠습니까?")) {
       try {
         await axios.delete(
-          `http://localhost:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}`,
+          `http://43.200.100.158:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}`,
           { withCredentials: true }
         );
         navigate(`/boardList/${thisGroupId.thisGroupId}`, {
-          state: { 
+          state: {
             groupId: thisGroupId.thisGroupId,
-            redirectUrl: `/planbee/groups/${thisGroupId.thisGroupId}`
-          }
+            redirectUrl: `/planbee/groups/${thisGroupId.thisGroupId}`,
+          },
         });
       } catch (error) {
         console.log("삭제 실패", error);
@@ -110,7 +131,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const handleAddReply = async () => {
     try {
       await axios.post(
-        `http://localhost:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply`,
+        `http://43.200.100.158:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply`,
         { replyContent: comment },
         { withCredentials: true }
       );
@@ -125,7 +146,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const handleAddNestedReply = async (parentReplyId) => {
     try {
       await axios.post(
-        `http://localhost:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply/${parentReplyId}`,
+        `http://43.200.100.158:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply/${parentReplyId}`,
         { replyContent: nestedReplyContent },
         { withCredentials: true }
       );
@@ -146,7 +167,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const handleModiSaveReply = async (replyId) => {
     try {
       await axios.put(
-        `http://localhost:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply/${replyId}`,
+        `http://43.200.100.158:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply/${replyId}`,
         { replyContent: editingReplyContent },
         { withCredentials: true }
       );
@@ -166,7 +187,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const handleDeleteReply = async (replyId) => {
     try {
       await axios.delete(
-        `http://localhost:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply/${replyId}`,
+        `http://43.200.100.158:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply/${replyId}`,
         { withCredentials: true }
       );
       fetchThisPost();
@@ -188,112 +209,136 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   };
 
   // 댓글 렌더링 (대댓글 포함) - 수정됨: 옵션 드롭다운 내부에 "대댓글 작성" 옵션 추가
-const renderReplies = (replies, indent = 0) => {
-  return replies.map((reply) => (
-    <div key={reply.replyId} style={{ marginLeft: indent }}>
-      <div className="comment">
-        <div className="comment_user" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <div className={`user_avatar ${reply.avatarClass || ""}`} />
-          <span className="user_name">{reply.userId}</span>
-          {/* 항상 옵션 버튼 표시 (작성자 여부와 상관없이) */}
-          <button
-            className="options_button"
-            onClick={() => toggleMenu(reply.replyId)}
+  const renderReplies = (replies, indent = 0) => {
+    return replies.map((reply) => (
+      <div key={reply.replyId} style={{ marginLeft: indent }}>
+        <div className="comment">
+          <div
+            className="comment_user"
+            style={{ display: "flex", alignItems: "center", gap: "10px" }}
           >
-            <FaEllipsisV />
-          </button>
-        </div>
-        <div className="comment_text_box">
-          {editingReplyId === reply.replyId ? (
-            <>
+            <div className={`user_avatar ${reply.avatarClass || ""}`} />
+            <span className="user_name">{reply.userId}</span>
+            {/* 항상 옵션 버튼 표시 (작성자 여부와 상관없이) */}
+            <button
+              className="options_button"
+              onClick={() => toggleMenu(reply.replyId)}
+            >
+              <FaEllipsisV />
+            </button>
+          </div>
+          <div className="comment_text_box">
+            {editingReplyId === reply.replyId ? (
+              <>
+                <textarea
+                  value={editingReplyContent}
+                  onChange={(e) => setEditingReplyContent(e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "8px",
+                    border: "1px solid #ddd",
+                    borderRadius: "5px",
+                    resize: "vertical",
+                  }}
+                />
+                <div style={{ marginTop: "5px", textAlign: "right" }}>
+                  <button
+                    onClick={() => handleModiSaveReply(reply.replyId)}
+                    style={{ marginRight: "5px" }}
+                  >
+                    저장
+                  </button>
+                  <button onClick={handleCancelReply}>취소</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="comment_text">{reply.replyContent}</p>
+                <span className="comment_time">{reply.replyDate}</span>
+              </>
+            )}
+          </div>
+
+          {/* 옵션 드롭다운 메뉴 */}
+          {activeMenu === reply.replyId && (
+            <div className="dropdown_menu comment_dropdown">
+              {/* 최상위 댓글일 경우에만 "대댓글 작성" 옵션 표시 */}
+              {indent === 0 && (
+                <button onClick={() => toggleNestedReply(reply.replyId)}>
+                  대댓글 작성
+                </button>
+              )}
+              {/* 내 댓글인 경우 수정/삭제 옵션 추가 */}
+              {reply.userId === sessionId && (
+                <>
+                  <button
+                    onClick={() =>
+                      handleModifyReply(reply.replyId, reply.replyContent)
+                    }
+                  >
+                    수정
+                  </button>
+                  <button onClick={() => handleDeleteReply(reply.replyId)}>
+                    삭제
+                  </button>
+                </>
+              )}
+            </div>
+          )}
+
+          {/* 대댓글 입력란 (토글된 댓글에 대해 표시) - 최상위 댓글에만 적용 */}
+          {activeNestedReplyId === reply.replyId && indent === 0 && (
+            <div
+              style={{
+                marginLeft: 20,
+                marginTop: 10,
+                backgroundColor: "white",
+                padding: "10px",
+                border: "1px solid #ddd",
+                borderRadius: "10px",
+              }}
+            >
+              <div
+                style={{
+                  marginBottom: "5px",
+                  fontSize: "0.9em",
+                  color: "gray",
+                }}
+              >
+                대댓글 작성
+              </div>
               <textarea
-                value={editingReplyContent}
-                onChange={(e) => setEditingReplyContent(e.target.value)}
+                placeholder="대댓글을 입력하세요..."
+                value={nestedReplyContent}
+                onChange={(e) => setNestedReplyContent(e.target.value)}
                 style={{
                   width: "100%",
                   padding: "8px",
                   border: "1px solid #ddd",
-                  borderRadius: "5px",
+                  borderRadius: "10px",
                   resize: "vertical",
                 }}
               />
               <div style={{ marginTop: "5px", textAlign: "right" }}>
-                <button onClick={() => handleModiSaveReply(reply.replyId)} style={{ marginRight: "5px" }}>
-                  저장
+                <button
+                  onClick={() => handleAddNestedReply(reply.replyId)}
+                  style={{ marginRight: "5px" }}
+                >
+                  등록
                 </button>
-                <button onClick={handleCancelReply}>취소</button>
+                <button onClick={() => setActiveNestedReplyId(null)}>
+                  취소
+                </button>
               </div>
-            </>
-          ) : (
-            <>
-              <p className="comment_text">{reply.replyContent}</p>
-              <span className="comment_time">{reply.replyDate}</span>
-            </>
+            </div>
           )}
         </div>
-
-        {/* 옵션 드롭다운 메뉴 */}
-        {activeMenu === reply.replyId && (
-          <div className="dropdown_menu comment_dropdown">
-            {/* 최상위 댓글일 경우에만 "대댓글 작성" 옵션 표시 */}
-            {indent === 0 && (
-              <button onClick={() => toggleNestedReply(reply.replyId)}>
-                대댓글 작성
-              </button>
-            )}
-            {/* 내 댓글인 경우 수정/삭제 옵션 추가 */}
-            {reply.userId === sessionId && (
-              <>
-                <button onClick={() => handleModifyReply(reply.replyId, reply.replyContent)}>
-                  수정
-                </button>
-                <button onClick={() => handleDeleteReply(reply.replyId)}>삭제</button>
-              </>
-            )}
-          </div>
-        )}
-
-        {/* 대댓글 입력란 (토글된 댓글에 대해 표시) - 최상위 댓글에만 적용 */}
-        {activeNestedReplyId === reply.replyId && indent === 0 && (
-          <div
-            style={{
-              marginLeft: 20,
-              marginTop: 10,
-              backgroundColor: "white",          
-              padding: "10px",
-              border: "1px solid #ddd",          
-              borderRadius: "10px"
-            }}
-          >
-            <div style={{ marginBottom: "5px", fontSize: "0.9em", color: "gray" }}>
-              대댓글 작성
-            </div>
-            <textarea
-              placeholder="대댓글을 입력하세요..."
-              value={nestedReplyContent}
-              onChange={(e) => setNestedReplyContent(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "8px",
-                border: "1px solid #ddd",
-                borderRadius: "10px",
-                resize: "vertical",
-              }}
-            />
-            <div style={{ marginTop: "5px", textAlign: "right" }}>
-              <button onClick={() => handleAddNestedReply(reply.replyId)} style={{ marginRight: "5px" }}>
-                등록
-              </button>
-              <button onClick={() => setActiveNestedReplyId(null)}>취소</button>
-            </div>
-          </div>
-        )}
+        {reply.replies &&
+          reply.replies.length > 0 &&
+          renderReplies(reply.replies, indent + 20)}
       </div>
-      {reply.replies && reply.replies.length > 0 && renderReplies(reply.replies, indent + 20)}
-    </div>
-  ));
-};
-
+    ));
+  };
 
   // 수정 모드 렌더링
   const renderEditMode = () => (
@@ -364,7 +409,13 @@ const renderReplies = (replies, indent = 0) => {
       </div>
       <div className="post_content">
         {isProgressCard() ? (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <div dangerouslySetInnerHTML={{ __html: thisPost.postContent }} />
           </div>
         ) : (
@@ -386,7 +437,10 @@ const renderReplies = (replies, indent = 0) => {
   // thisPost 변경 시, 수정 모드에서 보여줄 데이터 업데이트
   useEffect(() => {
     if (thisPost.postTitle && thisPost.postContent) {
-      setEditedPost({ title: thisPost.postTitle, contents: thisPost.postContent });
+      setEditedPost({
+        title: thisPost.postTitle,
+        contents: thisPost.postContent,
+      });
     }
   }, [thisPost]);
 

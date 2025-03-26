@@ -60,7 +60,7 @@ const Archive = () => {
     const yymmdd = formatToYYMMDD(selectedDate);
     try {
       const response = await axios.get(
-        `http://localhost:8080/planbee/archive/searchDate/${yymmdd}`,
+        `http://43.200.100.158:8080/planbee/archive/searchDate/${yymmdd}`,
         { withCredentials: true }
       );
       const fetched = response.data;
@@ -86,12 +86,12 @@ const Archive = () => {
       if (selectedDate) {
         const yymmdd = formatToYYMMDD(selectedDate);
         response = await axios.get(
-          `http://localhost:8080/planbee/archive/searchDate/${yymmdd}`,
+          `http://43.200.100.158:8080/planbee/archive/searchDate/${yymmdd}`,
           { withCredentials: true }
         );
       } else if (keyword) {
         response = await axios.get(
-          `http://localhost:8080/planbee/archive/searchKeyword/${keyword}`,
+          `http://43.200.100.158:8080/planbee/archive/searchKeyword/${keyword}`,
           { withCredentials: true }
         );
       }
@@ -126,7 +126,7 @@ const Archive = () => {
       try {
         // 초기 데이터 6개 요청
         const response = await axios.get(
-          `http://localhost:8080/planbee/archive?page=0&limit=6`,
+          `http://43.200.100.158:8080/planbee/archive?page=0&limit=6`,
           { withCredentials: true }
         );
 
@@ -163,7 +163,7 @@ const Archive = () => {
       try {
         const nextPage = fetchedPage + 1;
         const response = await axios.get(
-          `http://localhost:8080/planbee/archive?page=${nextPage}&limit=6`,
+          `http://43.200.100.158:8080/planbee/archive?page=${nextPage}&limit=6`,
           { withCredentials: true }
         );
         const fetched = response.data;

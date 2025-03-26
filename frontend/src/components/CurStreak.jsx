@@ -10,7 +10,7 @@ const CurStreak = () => {
     const fetchCurStreak = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/planbee/calendar/curStreak`,
+          `http://43.200.100.158:8080/planbee/calendar/curStreak`,
           {
             withCredentials: true,
           }
