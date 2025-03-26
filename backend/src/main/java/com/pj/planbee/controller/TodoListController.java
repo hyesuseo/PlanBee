@@ -47,17 +47,17 @@ public class TodoListController {
             @PathVariable String tdDate,
             @ApiIgnore HttpSession se) {
         String sessionId = (String) se.getAttribute("sessionId");
-        
+        System.out.println("sessionId" + sessionId);
         int todoId;
         int result = ts.checkRow(tdDate, sessionId);
         
         if (result == 0) {
-            //ts.inputRow(tdDate, sessionId);
+            ts.inputRow(tdDate, sessionId);
             todoId = ts.tdIdSearch(tdDate, sessionId);
         } else {
             todoId = result;
         }
-        
+        System.out.println("debug: "+ todoId);
         List<TDdetailDTO> list = new ArrayList<>();
         list = ts.getTodo(todoId);
         return list;

@@ -24,7 +24,7 @@
 
     <!-- 날짜 기준으로 빈 메모 생성 -->
     <insert id="dateWrite">
-     	insert ignore into ToDoList (todo_date, todo_memo, todo_progress, user_id) values (#{tdDate}, "", "0.0", #{sessionId})
+     	insert ignore into ToDoList (todo_date, todo_memo, todo_progress, user_id) values (#{tdDate}, " ", "0.0", #{sessionId})
     </insert>
 
     <!-- 메모 조회 -->

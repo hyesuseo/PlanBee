@@ -69,11 +69,11 @@ public int checkRow(String tdDate, String sessionId) { //열이 있는지 확인
 	
 	return selectedtdId;
 }
-//@Override
-//public void inputRow(String tdDate, String sessionId) { //
-//	tlMap.dateWrite(tdDate, sessionId); //열을 작성함	
-//	
-//}
+@Override
+public void inputRow(String tdDate, String sessionId) { //
+	tlMap.dateWrite(tdDate, sessionId); //열을 작성함	
+	
+}
 
 
 
