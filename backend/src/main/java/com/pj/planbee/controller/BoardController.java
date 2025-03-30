@@ -36,7 +36,6 @@ import io.swagger.annotations.ApiParam;
 @Api(value = "Board API", description = "그룹 내 게시글 및 댓글 관련 API")
 @RestController
 @RequestMapping("/groups")
-@CrossOrigin(origins = "*", allowedHeaders = "*", allowCredentials = "true")
 public class BoardController {
     
     @Autowired

@@ -20,7 +20,6 @@ import com.pj.planbee.dto.GroupDTO;
 import com.pj.planbee.service.GroupService;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders= "*", allowCredentials = "true")
 @RequestMapping("/groups")
 public class GroupController {
 	

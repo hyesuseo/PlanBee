@@ -1,0 +1,78 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pj.planbee.mapper.TDdetailMapper">
+
+    <resultMap type="com.pj.planbee.dto.TDdetailDTO" id="tddetail">
+        <id property="tdDetailId" column="tododetail_id" />
+        <result property="tdDetail" column="tododetail" />
+        <result property="tdDetailState" column="tododetail_state" />
+        <result property="tdDetailTime" column="tododetail_time"/>
+        <result property="tdId" column="todo_id" />
+    </resultMap>
+
+    <!-- 전체 가져오기 -->
+    <select id="getList" resultMap="tddetail">
+        SELECT * FROM ToDoList_Detail
+    </select>
+
+    <!-- 최근 삽입된 id 가져오기 -->
+    <select id="getLatest">
+        SELECT LAST_INSERT_ID()
+    </select>
+
+    <!-- 특정 todo_id의 상세목록 -->
+    <select id="getTodo" resultMap="tddetail">
+        SELECT * FROM ToDoList_Detail WHERE todo_id = #{tdId}
+    </select>
+
+    <!-- 투두디테일 추가 -->
+    <insert id="todoWrite">
+        INSERT INTO ToDoList_Detail (tododetail, tododetail_state, tododetail_time, todo_id)
+        VALUES (#{tdDetail}, 0, #{tdDetailTime}, #{tdId})
+    </insert>
+
+    <!-- 완료 상태 변경 -->
+    <update id="updateState">
+        UPDATE ToDoList_Detail
+        SET tododetail_state = #{state}
+        WHERE tododetail_id = #{tdDetailId}
+    </update>
+
+    <!-- 전체 수정 -->
+    <update id="todoModify">
+        UPDATE ToDoList_Detail
+        SET tododetail = #{tdDetail},
+            tododetail_time = #{tdDetailTime},
+            tododetail_state = #{tdDetailState}
+        WHERE tododetail_id = #{tdDetailId}
+    </update>
+
+    <!-- 삭제 -->
+    <delete id="todoDel">
+        DELETE FROM ToDoList_Detail
+        WHERE tododetail_id = #{tdDetailId}
+    </delete>
+
+    <!-- tododetail_id 조회 -->
+    <select id="getTdDetailId">
+        SELECT tododetail_id
+        FROM ToDoList_Detail
+        WHERE tododetail = #{tdDetail} AND todo_id = #{tdId}
+        ORDER BY tododetail_id DESC
+    </select>
+
+    <!-- 완료된 항목 수 -->
+    <select id="getComplete">
+        SELECT COUNT(*) FROM ToDoList_Detail
+        WHERE todo_id = #{todoId} AND tododetail_state = 1
+    </select>
+
+    <!-- 전체 항목 수 -->
+    <select id="getTotal">
+        SELECT COUNT(*) FROM ToDoList_Detail
+        WHERE todo_id = #{todoId}
+    </select>
+
+</mapper>

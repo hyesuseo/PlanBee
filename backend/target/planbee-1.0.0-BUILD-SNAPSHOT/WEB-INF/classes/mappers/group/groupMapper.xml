@@ -1,0 +1,53 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pj.planbee.mapper.GroupMapper">
+
+    <!-- 테이블을 위한 resultMap -->
+    <resultMap type="com.pj.planbee.dto.GroupDTO" id="groupResultMap">
+        <id property="groupId" column="group_id" />
+        <result property="groupName" column="group_name" />
+        <result property="groupKeywords" column="group_keywords" />
+        <result property="groupDate" column="group_date" javaType="java.time.LocalDateTime"/>
+        <result property="groupDescription" column="group_description" />
+        <result property="memberCount" column="member_count"/>
+    </resultMap>
+
+    <!-- 모든 그룹 목록 조회 (가입 인원 포함) -->
+    <select id="getAllGroups" resultMap="groupResultMap">
+        SELECT 
+            g.group_id, 
+            g.group_name, 
+            g.group_keywords, 
+            g.group_date, 
+            g.group_description, 
+            (SELECT COUNT(*) FROM Group_Members gm WHERE gm.group_id = g.group_id) AS member_count
+        FROM `Group` g
+    </select>
+
+    <!-- 그룹에 가입 -->
+    <insert id="joinGroup">
+        INSERT INTO Group_Members (user_id, group_id) VALUES (#{user_id}, #{group_id})
+    </insert>
+
+    <!-- 그룹에서 탈퇴 -->
+    <delete id="leaveGroup">
+        DELETE FROM Group_Members WHERE user_id = #{user_id} AND group_id = #{group_id}
+    </delete>
+
+    <!-- 가입한 그룹 있는지 확인 -->
+    <select id="isUserInGroup" resultType="int">
+        SELECT COUNT(*) FROM Group_Members WHERE user_id = #{user_id} AND group_id = #{group_id}
+    </select>
+    
+    <!-- 사용자의 가입된 그룹 ID 조회 -->
+    <select id="getUserGroupId" resultType="Integer">
+        SELECT group_id FROM Group_Members WHERE user_id = #{userId} LIMIT 1
+    </select>
+    
+    <!-- 그룹 이름 조회 (수정됨) -->
+    <select id="getGroupName">
+        SELECT group_name FROM `Group` WHERE group_id = #{groupId}
+    </select>
+</mapper>

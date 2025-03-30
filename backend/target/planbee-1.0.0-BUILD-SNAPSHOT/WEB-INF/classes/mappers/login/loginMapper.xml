@@ -1,0 +1,33 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pj.planbee.mapper.LoginMapper">
+
+    <!-- real_user 테이블을 위한 resultMap -->
+    <resultMap type="com.pj.planbee.dto.LoginDTO" id="realUserResultMap">
+        <id property="userId" column="user_id" />
+        <result property="userPw" column="user_pw" />
+        <result property="userName" column="user_name" />
+        <result property="userEmail" column="user_email" />
+        <result property="userPhone" column="user_phone" />
+        <result property="userCol1" column="user_col_1" />
+        <result property="userCol2" column="user_col_2" />
+        <result property="userCol3" column="user_col_3" />
+        <result property="userPer1" column="user_per_1" />
+        <result property="userPer2" column="user_per_2" />
+    </resultMap>
+
+    <!-- 로그인 쿼리 -->
+    <select id="login" parameterType="map" resultMap="realUserResultMap">
+        SELECT * FROM real_user 
+        WHERE user_id = #{userId} 
+        AND user_pw = #{userPw}
+    </select>
+    
+    <!-- ID 중복 확인 -->
+    <select id="countUserId" resultType="int">
+        SELECT COUNT(*) FROM real_user WHERE user_id = #{userId}
+    </select>
+
+</mapper>

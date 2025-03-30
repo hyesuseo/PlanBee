@@ -1,0 +1,84 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pj.planbee.mapper.ArchiveMapper">
+
+    <!-- archive_detail 전용 resultMap -->
+    <resultMap type="com.pj.planbee.dto.ArchDetailDTO" id="archDetailResultMap">
+        <id property="archDetailId" column="archivedetail_id" />
+        <result property="archDetail" column="archivedetail" />
+        <result property="archDetailState" column="archivedetail_state" />
+        <result property="archDetailTime" column="archivedetail_time" />
+    </resultMap>
+
+    <!-- archive 전용 resultMap -->
+    <resultMap type="com.pj.planbee.dto.ArchiveDTO" id="archiveResultMap">
+        <id property="archiveId" column="archive_id" />
+        <result property="archiveDate" column="archive_date" />
+        <result property="archiveMemo" column="archive_memo" />
+        <result property="archiveProgress" column="archive_progress" />
+        <result property="userId" column="user_id" />
+        <collection property="archiveDetails" resultMap="archDetailResultMap" />
+    </resultMap>
+
+    <!-- 페이징을 적용한 아카이브 데이터 조회 -->
+    <select id="getPagedArchives" resultMap="archiveResultMap">
+        SELECT
+        a.archive_id,
+        a.archive_date,
+        a.archive_memo,
+        a.archive_progress,
+        a.user_id,
+        ad.archivedetail_id,
+        ad.archivedetail,
+        ad.archivedetail_state,
+        ad.archivedetail_time
+        FROM archive a
+        LEFT JOIN archive_detail ad ON a.archive_id = ad.archive_id
+        WHERE a.user_id = #{userId}
+        ORDER BY STR_TO_DATE(a.archive_date, '%y%m%d') DESC
+        LIMIT #{limit} OFFSET #{offset};
+    </select>
+
+    <!-- 날짜 검색 -->
+    <select id="findArchivesByDate" resultMap="archiveResultMap">
+        SELECT
+        a.archive_id,
+        a.archive_date,
+        a.archive_memo,
+        a.archive_progress,
+        a.user_id,
+        ad.archivedetail_id,
+        ad.archivedetail,
+        ad.archivedetail_state,
+        ad.archivedetail_time
+        FROM archive a
+        LEFT JOIN archive_detail ad ON a.archive_id = ad.archive_id
+        WHERE a.user_id = #{userId}
+        AND a.archive_date = #{date}
+        ORDER BY STR_TO_DATE(a.archive_date, '%y%m%d') DESC;
+    </select>
+
+    <!-- 내용 검색 (가장 최근 데이터 기준 6개) -->
+    <select id="searchByDetail" resultMap="archiveResultMap">
+		SELECT
+		a.archive_id,
+		a.archive_date,
+		a.archive_memo,
+		a.archive_progress,
+		a.user_id,
+		ad.archivedetail_id,
+		ad.archivedetail,
+		ad.archivedetail_state,
+		ad.archivedetail_time
+		FROM archive a
+		LEFT JOIN archive_detail ad ON a.archive_id = ad.archive_id
+		WHERE a.user_id = #{userId}
+		AND ad.archivedetail LIKE CONCAT('%', #{keyword}, '%')
+		AND STR_TO_DATE(a.archive_date, '%y%m%d') &lt; CURDATE()
+		ORDER BY STR_TO_DATE(a.archive_date, '%y%m%d') DESC
+		LIMIT 6;
+	</select>
+
+</mapper>

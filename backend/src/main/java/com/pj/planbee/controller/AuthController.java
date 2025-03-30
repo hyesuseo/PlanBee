@@ -3,6 +3,7 @@ package com.pj.planbee.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,6 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Api(value = "Auth API", description = "회원가입, 로그인, 이메일 인증 등 인증 관련 API")
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*", allowCredentials = "true")
 @RequestMapping("/auth")
 public class AuthController {
 
@@ -113,7 +113,7 @@ public class AuthController {
     @PostMapping(value = "/login", produces = "application/json; charset=utf-8")
     public int login(
             @ApiParam(value = "로그인 정보 (LoginDTO: userId, userPw)", required = true) @RequestBody LoginDTO loginDTO,
-            HttpSession session) {
+            HttpSession session, HttpServletResponse response) {
         String userId = loginDTO.getUserId();
         String userPw = loginDTO.getUserPw();
 
@@ -136,6 +136,7 @@ public class AuthController {
         }
 
         session.setAttribute("sessionId", userId);
+      
         return 1;
     }
 

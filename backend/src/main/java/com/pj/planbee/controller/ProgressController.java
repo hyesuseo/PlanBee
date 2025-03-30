@@ -28,7 +28,6 @@ import com.pj.planbee.service.GroupService;
 import com.pj.planbee.service.ProgressService;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*", allowCredentials = "true")
 @RequestMapping("/groups")
 public class ProgressController {
 

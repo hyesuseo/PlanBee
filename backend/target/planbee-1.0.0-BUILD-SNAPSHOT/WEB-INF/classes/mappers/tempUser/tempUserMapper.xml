@@ -1,0 +1,96 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pj.planbee.mapper.TempUserMapper">
+
+    <resultMap type="com.pj.planbee.dto.TempUserDTO" id="tempuser">
+        <id property="tempUserId" column="tempuser_id" />
+        <result property="tempUserPw" column="tempuser_pw" />
+        <result property="tempUserName" column="tempuser_name" />
+        <result property="tempUserEmail" column="tempuser_email" />
+        <result property="tempUserPhone" column="tempuser_phone" />
+        <result property="tempUserCode" column="tempuser_code" />
+        <result property="createdAt" column="created_at" />
+    </resultMap>
+
+    <!-- user_id 중복 확인 -->
+    <select id="countUserId" resultType="int">
+        SELECT COUNT(*) FROM real_user WHERE user_id = #{tempUserId}
+    </select>
+
+    <!-- user_email 중복 확인 -->
+    <select id="countUserEmail" resultType="int">
+        SELECT COUNT(*) FROM real_user WHERE user_email = #{tempUserEmail}
+    </select>
+
+    <!-- 특정 이메일을 기준으로 temp_user 조회 -->
+    <select id="getTempUserByEmail" resultMap="tempuser">
+        SELECT * FROM temp_user WHERE tempuser_email = #{tempUserEmail}
+    </select>
+
+    <!-- 전체 temp_user 조회 -->
+    <select id="getTempUser" resultMap="tempuser">
+        SELECT * FROM temp_user
+    </select>
+
+    <!-- 특정 tempUserId로 temp_user 조회 -->
+    <select id="getTempUserData" resultMap="tempuser">
+        SELECT * FROM temp_user WHERE tempuser_id = #{tempUserId}
+    </select>
+
+    <!-- temp_user 삽입 -->
+    <insert id="insertTempUser">
+        INSERT INTO temp_user (tempuser_id, tempuser_pw, tempuser_name, tempuser_email, tempuser_phone, tempuser_code, verify_status)
+        VALUES (#{tempUserId}, #{tempUserPw}, #{tempUserName}, #{tempUserEmail}, #{tempUserPhone}, #{tempUserCode}, COALESCE(#{verifyStatus}, 0))
+    </insert>
+
+    <!-- 이메일 존재 여부 확인 -->
+    <select id="checkTempUserExists" resultType="int">
+        SELECT COUNT(*) FROM temp_user WHERE tempuser_email = #{tempUserEmail}
+    </select>
+
+    <!-- 기존 데이터가 있을 경우 업데이트 -->
+    <update id="updateTempUser">
+        UPDATE temp_user
+        SET tempuser_id = #{tempUserId},
+            tempuser_pw = #{tempUserPw},
+            tempuser_name = #{tempUserName},
+            tempuser_phone = #{tempUserPhone},
+            tempuser_code = #{tempUserCode},
+            verify_status = COALESCE(#{verifyStatus}, 0)
+        WHERE tempuser_email = #{tempUserEmail}
+    </update>
+
+    <!-- temp_user 삭제 -->
+    <delete id="deleteTempUser">
+        DELETE FROM temp_user WHERE tempuser_email = #{tempUserEmail}
+    </delete>
+
+    <!-- 인증 코드 조회 -->
+    <select id="getTempUserCode" resultType="String">
+        SELECT tempuser_code FROM temp_user WHERE tempuser_email = #{tempUserEmail}
+    </select>
+
+    <!-- 인증 성공 시 상태 변경 -->
+    <update id="updateVerifyStatus">
+        UPDATE temp_user
+        SET verify_status = 1
+        WHERE tempuser_email = #{tempUserEmail}
+    </update>
+
+    <!-- 인증 상태 확인 -->
+    <select id="getVerifyStatus" resultType="Integer">
+        SELECT verify_status FROM temp_user WHERE tempuser_email = #{tempUserEmail}
+    </select>
+
+    <!-- 만료된 사용자 삭제 -->
+    <delete id="deleteExpiredTempUsers">
+        <![CDATA[
+        DELETE FROM temp_user
+        WHERE verify_status = 0 
+        AND created_at < NOW() - INTERVAL 5 MINUTE
+        ]]>
+    </delete>
+
+</mapper>

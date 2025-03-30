@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/calendar")
-@CrossOrigin(origins = "*", allowedHeaders= "*", allowCredentials = "true")
 public class CalendarController {
 
     @Autowired CalendarService cs;

@@ -17,7 +17,6 @@ import com.pj.planbee.dto.ReplyDTO;
 import com.pj.planbee.service.ReplyService;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders= "*", allowCredentials = "true")
 @RequestMapping("/groups/{groupId}/boards/{postId}/reply")
 public class ReplyController {
 	

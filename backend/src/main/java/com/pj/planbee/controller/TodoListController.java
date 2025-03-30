@@ -33,7 +33,6 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(value = "ToDoList API", description = "투두리스트 관련 API")
 @RestController
 @RequestMapping("/todolist")
-@CrossOrigin(origins = "*", allowedHeaders = "*", allowCredentials = "true")
 public class TodoListController {
 
     @Autowired

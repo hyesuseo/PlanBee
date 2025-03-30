@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pj.planbee.mapper.CalendarMapper">
+
+	<!-- calendar 테이블 매핑 -->
+	<resultMap type="com.pj.planbee.dto.CalendarDTO" id="calDTO">
+		<id property="calId" column="cal_id" />
+		<result property="calDetail1" column="cal_detail_1" />
+		<result property="calDetail2" column="cal_detail_2" />
+		<result property="calDetail3" column="cal_detail_3" />
+		<result property="calDate" column="cal_date" />
+		<result property="userId" column="user_id" />
+	</resultMap>
+
+	<!-- calendar + ToDoList 조인용 -->
+	<resultMap type="com.pj.planbee.dto.ProgressDTO" id="proDTO">
+		<id property="calId" column="cal_id" />
+		<result property="calDetail1" column="cal_detail_1" />
+		<result property="calDetail2" column="cal_detail_2" />
+		<result property="calDetail3" column="cal_detail_3" />
+		<result property="calDate" column="cal_date" />
+		<result property="userId" column="user_id" />
+		<result property="tdProgress" column="todo_progress" />
+	</resultMap>
+
+	<!-- 일별 진척도 조회 -->
+	<select id="getProgress" resultType="double">
+		SELECT todo_progress
+		FROM ToDoList
+		WHERE todo_date = #{calDate} AND user_id = #{userId}
+	</select>
+
+	<!-- 월별 진척도 평균 -->
+	<select id="monthProgress" resultType="double"
+		parameterType="map">
+		SELECT ROUND(AVG(todo_progress), 2) AS avg_progress
+		FROM ToDoList
+		WHERE todo_date LIKE CONCAT(#{yyMM}, '%')
+		AND user_id = #{sessionId}
+	</select>
+
+
+	<!-- 특정 달(yyMM) 메모 조회 (JOIN) -->
+	<select id="getMemo" resultMap="proDTO">
+		SELECT
+		c.cal_id,
+		c.cal_detail_1,
+		c.cal_detail_2,
+		c.cal_detail_3,
+		c.cal_date,
+		c.user_id,
+		IFNULL(t.todo_progress, 0) AS todo_progress
+		FROM calendar c
+		LEFT JOIN ToDoList t
+		ON c.cal_date = t.todo_date
+		AND c.user_id = t.user_id
+		WHERE c.cal_date LIKE CONCAT(#{yyMM}, '%')
+		AND c.user_id = #{sessionId}
+	</select>
+
+	<insert id="addMemo" parameterType="com.pj.planbee.dto.CalendarDTO">
+		INSERT INTO calendar (cal_date, user_id, cal_detail_1, cal_detail_2,
+		cal_detail_3)
+		VALUES (#{calDate}, #{userId}, #{calDetail1}, #{calDetail2}, #{calDetail3})
+	</insert>
+
+
+	<!-- 메모 수정 -->
+	<update id="modiMemo" parameterType="com.pj.planbee.dto.CalendarDTO">
+		UPDATE calendar
+		<set>
+			<if test="calDetail1 != null">
+				cal_detail_1 = #{calDetail1},
+			</if>
+			<if test="calDetail2 != null">
+				cal_detail_2 = #{calDetail2},
+			</if>
+			<if test="calDetail3 != null">
+				cal_detail_3 = #{calDetail3},
+			</if>
+		</set>
+		WHERE cal_date = #{calDate} AND user_id = #{userId}
+	</update>
+
+	<!-- 메모 삭제 -->
+	<update id="delMemo" parameterType="map">
+		UPDATE calendar
+		SET
+		<choose>
+			<when test="fieldNo == 1">
+				cal_detail_1 = null
+			</when>
+			<when test="fieldNo == 2">
+				cal_detail_2 = null
+			</when>
+			<when test="fieldNo == 3">
+				cal_detail_3 = null
+			</when>
+			<otherwise>
+				cal_detail_1 = cal_detail_1
+			</otherwise>
+		</choose>
+		WHERE cal_id = #{calId}
+	</update>
+
+	<!-- 특정 월 데이터 개수 확인 -->
+	<select id="countByMonth" resultType="int">
+		SELECT COUNT(*) FROM calendar
+		WHERE cal_date LIKE #{monthPre} || '%' AND user_id = #{userId}
+	</select>
+
+	<!-- 여러 날짜 삽입 -->
+	<insert id="insertNewDate">
+		INSERT INTO calendar (cal_date, user_id, cal_detail_1, cal_detail_2,
+		cal_detail_3, cal_progress)
+		VALUES
+		<foreach collection="date" item="item" separator=",">
+			(#{item.calDate}, #{item.userId}, #{item.calDetail1},
+			#{item.calDetail2}, #{item.calDetail3}, #{item.calProgress})
+		</foreach>
+	</insert>
+
+	<!-- 월별 데이터 조회 -->
+	<select id="getByMonth" resultMap="calDTO">
+		SELECT * FROM calendar
+		WHERE cal_date LIKE #{monthPre} || '%' AND user_id = #{userId}
+		ORDER BY cal_date
+	</select>
+
+	<!-- 기존 메모 수정 -->
+	<update id="updateMemo" parameterType="com.pj.planbee.dto.CalendarDTO">
+		UPDATE calendar
+		SET cal_detail_1 = #{calDetail1},
+		cal_detail_2 = #{calDetail2},
+		cal_detail_3 = #{calDetail3},
+		cal_progress = #{calProgress}
+		WHERE cal_id = #{calId}
+	</update>
+</mapper>

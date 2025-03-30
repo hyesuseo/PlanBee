@@ -1,0 +1,63 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pj.planbee.mapper.ReplyMapper">
+
+    <resultMap type="com.pj.planbee.dto.ReplyDTO" id="reply">
+        <id property="replyId" column="reply_id" />
+        <result property="postId" column="post_id" />
+        <result property="userId" column="user_id" />
+        <result property="replyContent" column="reply_content" />
+        <result property="replyDate" column="reply_date" />
+        <result property="repReplyId" column="rep_reply_id" />
+    </resultMap>
+
+    <!-- 댓글 및 대댓글 등록 -->
+    <insert id="insertReply">
+        INSERT INTO reply (post_id, user_id, reply_content, rep_reply_id)
+        VALUES (#{postId}, #{userId}, #{replyContent}, #{repReplyId})
+    </insert>
+
+    <!-- 특정 게시글의 댓글 및 대댓글 -->
+    <select id="getRepliesByPostId" resultMap="reply">
+        SELECT * FROM reply
+        WHERE post_id = #{postId}
+        ORDER BY rep_reply_id ASC, reply_date ASC
+    </select>
+
+    <!-- 댓글 및 대댓글 수정 -->
+    <update id="updateReply">
+        UPDATE reply
+        SET reply_content = #{replyContent}
+        WHERE reply_id = #{replyId}
+        AND post_id = #{postId}
+        AND user_id = #{userId}
+    </update>
+
+    <!-- 댓글 및 대댓글 삭제 -->
+    <delete id="deleteReply">
+        DELETE FROM reply
+        WHERE reply_id = #{replyId}
+        AND post_id = #{postId}
+        AND user_id = #{userId}
+    </delete>
+
+    <!-- 댓글 및 대댓글 조회 -->
+    <select id="getReplyAndRepReplyByPostId"
+            resultType="com.pj.planbee.dto.ReplyDTO">
+        SELECT
+            reply_id AS replyId,
+            post_id AS postId,
+            reply_content AS replyContent,
+            user_id AS userId,
+            reply_date AS replyDate,
+            rep_reply_id AS repReplyId
+        FROM reply
+        WHERE post_id = #{postId}
+        ORDER BY
+            CASE WHEN rep_reply_id IS NULL THEN reply_id ELSE rep_reply_id END ASC,
+            reply_date ASC
+    </select>
+
+</mapper>

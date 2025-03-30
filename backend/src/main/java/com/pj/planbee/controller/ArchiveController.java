@@ -17,7 +17,6 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Api(value = "Archive API", description = "아카이브 데이터 관련 API")
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*", allowCredentials = "true")
 @RequestMapping("/archive")
 public class ArchiveController {
 
