@@ -15,6 +15,8 @@
     <property name="leakDetectionThreshold" value="2000" />
     <property name="idleTimeout" value="600000" />
     <property name="maxLifetime" value="1800000" />
+    <property name="maximumPoolSize" value="50" /> <!-- 커넥션 풀 최대 크기 -->
+    <property name="connectionTimeout" value="30000" /> <!-- 커넥션 타임아웃 -->
 </bean>
 
 	

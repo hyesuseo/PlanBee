@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pj.planbee.dto.TDdetailDTO;
+import com.pj.planbee.dto.TodoDashboardDTO;
 import com.pj.planbee.dto.TodoListDTO;
 import com.pj.planbee.dto.TodoListDTO.SubTodoListDTO;
 import com.pj.planbee.service.TodoListService;
@@ -30,7 +31,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 
-@Api(value = "ToDoList API", description = "투두리스트 관련 API")
 @RestController
 @RequestMapping("/todolist")
 @CrossOrigin(origins="http://localhost:3000", allowCredentials ="true")
@@ -39,8 +39,40 @@ public class TodoListController {
     @Autowired
     TodoListService ts;
 
-    @ApiOperation(value = "투두리스트 가져오기", 
-                  notes = "YYMMDD 형식의 날짜를 입력하면 해당 날짜의 투두리스트 정보를 가져옵니다. 만약 해당 날짜의 데이터가 없으면 새 행을 생성합니다.")
+    @GetMapping(value = "/dashBoard/{tdDate}", produces = "application/json; charset=utf-8")
+    public TodoDashboardDTO dashboardData(@PathVariable String tdDate, HttpSession se) {
+    	String sessionId = (String) se.getAttribute("sessionId");
+    	System.out.println("todolist sessionId" + sessionId);
+    	TodoDashboardDTO dashboard = new TodoDashboardDTO();
+    	
+    	int todoId;
+    	//열이 있는지 확인한다
+    	int result = ts.checkRow(tdDate, sessionId);
+    	System.out.println("해당날짜에 해당하는 열번호"+ result);
+    	if(result == 0) { //열이 없으면 한 열을 입력하고 그 결과를 반환한다.
+    		ts.inputRow(tdDate, sessionId);
+    		todoId = ts.tdIdSearch(tdDate, sessionId);
+    	}else { //열이 있으면 그 결과값을 반환한다.
+    		todoId = result;
+    	}
+    	dashboard.setTodoId(result);
+    	
+    	//todoDetail들을 리스트 형식으로 가져온다.
+    	List<TDdetailDTO> list = ts.getTodo(todoId); //한 줄로 쓰는게 더 개선된 부분이라고 함
+    	dashboard.setTodoList(list);
+    	System.out.println("그날짜의 todolist"+list);
+    	
+    	//todoMemo를 값으로 가져온다.
+    	String memo = ts.getMemo(todoId);
+    	dashboard.setMemo(memo);
+    	
+    	//진척도를 값으로 가져온다.
+    	double progress = ts.todoProgress(todoId);
+        ts.regiProgress(todoId, progress);
+        dashboard.setProgress(progress);
+        
+    return dashboard;
+    }
     @GetMapping(value = "/getTodo/{tdDate}", produces = "application/json; charset=utf-8")
     public List<TDdetailDTO> getToday(
             @ApiParam(value = "YYMMDD 형식의 날짜 (예: 230315)", required = true) 
@@ -122,25 +154,6 @@ public class TodoListController {
         return ts.todoModify(dto);
     }
 
-    @ApiOperation(value = "하루 메모 조회", 
-                  notes = "YYMMDD 형식의 날짜를 입력받아 해당 날짜의 메모를 조회합니다. 만약 해당 날짜에 데이터가 없으면 새 행을 생성합니다.")
-    @Transactional
-    @GetMapping(value = "/getMemo/{tdDate}", produces = "application/json; charset=utf-8")
-    public List<SubTodoListDTO> getMemo(
-            @ApiParam(value = "YYMMDD 형식의 날짜 (예: 230315)", required = true) 
-            @PathVariable String tdDate,
-            HttpSession se) {
-        String sessionId = (String) se.getAttribute("sessionId");
-        int tdId = ts.tdIdSearch(tdDate, sessionId);
-        List<SubTodoListDTO> list = ts.getMemo(tdId);
-        
-        if (list.isEmpty()) {
-            ts.inputRow(tdDate, sessionId);
-            tdId = ts.tdIdSearch(tdDate, sessionId);
-            list = ts.getMemo(tdId);
-        }
-        return list;
-    }
 
     @ApiOperation(value = "메모 작성/수정", 
                   notes = "TodoListDTO를 이용해 메모를 작성하거나 수정합니다.")

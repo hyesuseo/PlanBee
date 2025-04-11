@@ -17,7 +17,7 @@ public interface TodoListMapper {
 		public int getLatest(); //가장 최신의 tdId를 가져오는 기능
 		public String dateSearch(int tdId); //tdId로 tdDate를 가져오는 기능
 		//memo관련 기능
-		public List<TodoListDTO.SubTodoListDTO> getMemo(int tdId);
+		public String getMemo(int tdId);
 		public int memoWrite(TodoListDTO listDto);
 		public int memoUpdate();
 		//메모삭제기능 삭제함

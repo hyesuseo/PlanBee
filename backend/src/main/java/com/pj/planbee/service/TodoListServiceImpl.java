@@ -190,15 +190,15 @@ public double todoProgress(int tdId) {
 }
 
 @Override
-public List<SubTodoListDTO> getMemo(int tdId) {
-	List<SubTodoListDTO> list = new ArrayList<SubTodoListDTO>();
+public String getMemo(int tdId) {
+	String memo = "";
 	try {
-		list = tlMap.getMemo(tdId);
+		memo = tlMap.getMemo(tdId);
 		//System.out.println("ser:"+ list);
 	} catch (Exception e) {
 		e.printStackTrace();
 	}
-	return list;
+	return memo;
 }
 
 @Override
