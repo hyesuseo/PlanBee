@@ -21,6 +21,7 @@ import com.pj.planbee.service.GroupService;
 
 @RestController
 @RequestMapping("/groups")
+@CrossOrigin(origins="http://localhost:3000", allowCredentials ="true")
 public class GroupController {
 	
     @Autowired GroupService gs;

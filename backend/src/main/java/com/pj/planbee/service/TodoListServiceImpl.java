@@ -71,7 +71,19 @@ public int checkRow(String tdDate, String sessionId) { //열이 있는지 확인
 }
 @Override
 public void inputRow(String tdDate, String sessionId) { //
-	tlMap.dateWrite(tdDate, sessionId); //열을 작성함	
+	if (sessionId == null || sessionId.trim().isEmpty()){
+		System.out.println("로그인되지 않은 사용자 사용 불가");
+	}
+	int exist = checkRow(tdDate, sessionId);
+	if (exist == 0) {
+		try {
+			tlMap.dateWrite(tdDate, sessionId); //열을 작성함	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 	
 }
 

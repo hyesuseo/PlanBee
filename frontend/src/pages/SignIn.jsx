@@ -34,7 +34,7 @@ const SignIn = () => {
     try {
       console.log("전송할 사용자 정보:", userInfo);
       const response = await axios.post(
-        `https://43.200.100.158:8080/planbee/auth/email/send`,
+        `http://localhost:8080/planbee/auth/email/send`,
         userInfo
       );
 
@@ -75,7 +75,7 @@ const SignIn = () => {
       console.log(userInfo, userCode);
       const dataToSend = { ...userInfo, tempUserCode: userCode };
       const response = await axios.post(
-        `https://43.200.100.158:8080/planbee/auth/email/verify`,
+        `http://localhost:8080/planbee/auth/email/verify`,
         dataToSend
       );
       console.log("인증 완료!", response.data);
@@ -90,7 +90,7 @@ const SignIn = () => {
       console.log(userInfo, userCode);
       const dataToSend = { ...userInfo, tempUserCode: userCode };
       const response = await axios.post(
-        `https://43.200.100.158:8080/planbee/auth/register`,
+        `http://localhost:8080/planbee/auth/register`,
         dataToSend
       );
       console.log("회원가입 완료!", response.data);
@@ -112,17 +112,24 @@ const SignIn = () => {
       setUserPw(value);
     }
   };
-  const loginData = {
-    userId: userId,
-    userPw: userPw,
-  };
-
+  
   const Login = async () => {
     try {
+      const loginData = {
+        "userId": userId,
+        "userPw": userPw
+      }
+      console.log("로그인요청데이터", loginData)
       const response = await axios.post(
-        `https://43.200.100.158:8080/planbee/auth/login`,
+        `http://localhost:8080/planbee/auth/login`,
         loginData,
-        { withCredentials: true }
+        {
+          headers: { 
+            "Content-Type": "application/json" 
+          },
+          withCredentials: true
+        }
+        
       );
       alert("로그인 완료!");
       console.log("로그인 완료!", response.data);
@@ -136,7 +143,7 @@ const SignIn = () => {
   const makeSession = async () => {
     try {
       const response = await axios.get(
-        `https://43.200.100.158:8080/planbee/auth/session`,
+        `http://localhost:8080/planbee/auth/session`,
         {
           withCredentials: true,
         }
@@ -189,12 +196,9 @@ const SignIn = () => {
             <div className="logIn_button">
               <input
                 className="login_btn"
-                type="submit"
+                type="button"
                 value="Login"
-                onClick={(e) => {
-                  e.preventDefault();
-                  Login();
-                }}
+                onClick={Login}
               />
             </div>
             <button

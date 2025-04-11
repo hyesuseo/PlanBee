@@ -25,7 +25,7 @@ const SocialCom = ({ Info, sessionId }) => {
     //requestUrl을 통해서 그룹들의 리스트 렌더링
     try {
       const response = await axios.get(
-        `https://43.200.100.158:8080/${requestUrl}`,
+        `http://localhost:8080/${requestUrl}`,
         {
           withCredentials: true,
         }

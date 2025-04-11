@@ -21,7 +21,7 @@ const GroupJoinPopUp = ({ groupName, onClose, groupId }) => {
   const handleJoinGroup = async () => {
     try {
       const response = await axios.post(
-        `https://43.200.100.158:8080/planbee/groups/join?groupId=${groupId}`,
+        `http://localhost:8080/planbee/groups/join?groupId=${groupId}`,
         {},
         {
           withCredentials: true,

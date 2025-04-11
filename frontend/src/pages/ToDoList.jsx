@@ -15,7 +15,7 @@ const ToDoList = () => {
     const fetchPercent = async () => {
       try {
         const response = await axios.get(
-          `https://43.200.100.158:8080/planbee/todolist/progress/${getFormattedTodayYYMMDD()}`,
+          `http://localhost:8080/planbee/todolist/progress/${getFormattedTodayYYMMDD()}`,
           {
             withCredentials: true,
           }

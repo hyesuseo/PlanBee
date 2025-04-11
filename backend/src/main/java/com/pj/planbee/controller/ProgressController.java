@@ -29,6 +29,7 @@ import com.pj.planbee.service.ProgressService;
 
 @RestController
 @RequestMapping("/groups")
+@CrossOrigin(origins="http://localhost:3000", allowCredentials ="true")
 public class ProgressController {
 
 	// http://localhost:8080/planbee/groups/1/boards

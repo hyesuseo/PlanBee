@@ -18,6 +18,7 @@ import com.pj.planbee.service.ReplyService;
 
 @RestController
 @RequestMapping("/groups/{groupId}/boards/{postId}/reply")
+@CrossOrigin(origins="http://localhost:3000", allowCredentials ="true")
 public class ReplyController {
 	
 	@Autowired ReplyService rs;

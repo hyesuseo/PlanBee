@@ -26,11 +26,12 @@ import com.pj.planbee.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import springfox.documentation.annotations.ApiIgnore;
+
 
 @Api(value = "Auth API", description = "회원가입, 로그인, 이메일 인증 등 인증 관련 API")
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins="http://localhost:3000", allowCredentials ="true")
 public class AuthController {
 
     @Autowired 
@@ -114,9 +115,10 @@ public class AuthController {
     public int login(
             @ApiParam(value = "로그인 정보 (LoginDTO: userId, userPw)", required = true) @RequestBody LoginDTO loginDTO,
             HttpSession session, HttpServletResponse response) {
+    	System.out.println("로그인 컨트롤러 진입");
         String userId = loginDTO.getUserId();
         String userPw = loginDTO.getUserPw();
-
+        System.out.println("로그인DTO" + loginDTO);
         if (userId == null || userPw == null) {
             return -3;
         }

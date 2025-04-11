@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;
 
 @Configuration
-@EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
@@ -13,7 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoginCheckInterceptor())
         .addPathPatterns("/**") // 모든 요청 가로채기
         .excludePathPatterns(
-            "/auth/**",
+            "/planbee/auth/**",
             "/css/**", "/js/**", "/images/**", "/favicon.ico", // 정적 리소스들
             "/swagger-ui.html",          // Swagger UI 기본 페이지
             "/swagger-resources/**",     // Swagger 관련 리소스들
@@ -34,9 +33,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://planbee-two.vercel.app") // FE 주소
+                .allowedOrigins("http://localhost:3000") // FE 주소
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("Content-Type", "X-Requested-With", "Accept", "Authorization")
-                .allowCredentials(true);
+                .allowCredentials(true)
+                .exposedHeaders("Authorization");
     }
 }

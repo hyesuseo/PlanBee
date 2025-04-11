@@ -12,7 +12,14 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
     	
+    	String uri = request.getRequestURI();
+    	System.out.println("요청 URI" + uri);
     	 if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+    		 response.setStatus(HttpServletResponse.SC_OK);
+    	        return true;
+    	    }
+    	 
+    	 if (uri.startsWith("/planbee/auth/")) {
     	        return true;
     	    }
 

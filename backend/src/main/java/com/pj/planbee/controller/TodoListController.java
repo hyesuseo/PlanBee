@@ -28,11 +28,12 @@ import com.pj.planbee.service.TodoListService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import springfox.documentation.annotations.ApiIgnore;
+
 
 @Api(value = "ToDoList API", description = "투두리스트 관련 API")
 @RestController
 @RequestMapping("/todolist")
+@CrossOrigin(origins="http://localhost:3000", allowCredentials ="true")
 public class TodoListController {
 
     @Autowired
@@ -44,9 +45,9 @@ public class TodoListController {
     public List<TDdetailDTO> getToday(
             @ApiParam(value = "YYMMDD 형식의 날짜 (예: 230315)", required = true) 
             @PathVariable String tdDate,
-            @ApiIgnore HttpSession se) {
+            HttpSession se) {
         String sessionId = (String) se.getAttribute("sessionId");
-        System.out.println("sessionId" + sessionId);
+        System.out.println("todolist sessionId" + sessionId);
         int todoId;
         int result = ts.checkRow(tdDate, sessionId);
         
@@ -71,7 +72,7 @@ public class TodoListController {
             @RequestBody TDdetailDTO dto,
             @ApiParam(value = "YYMMDD 형식의 날짜 (예: 230315)", required = true) 
             @PathVariable String tdDate,
-            @ApiIgnore HttpSession se) {
+            HttpSession se) {
         String sessionId = (String) se.getAttribute("sessionId");
         int tdId = ts.tdIdSearch(tdDate, sessionId);
         dto.setTdId(tdId);
@@ -105,7 +106,7 @@ public class TodoListController {
     public double updateState(
             @ApiParam(value = "업데이트할 투두리스트 정보 (TDdetailDTO: tdDetailId, tdDetailState, tdId)", required = true) 
             @RequestBody TDdetailDTO dto,
-            @ApiIgnore HttpSession se) {
+            HttpSession se) {
         ts.updateState(dto.getTdDetailId(), dto.isTdDetailState());
         double progress = ts.todoProgress(dto.getTdId());
         ts.regiProgress(dto.getTdId(), progress);
@@ -128,13 +129,13 @@ public class TodoListController {
     public List<SubTodoListDTO> getMemo(
             @ApiParam(value = "YYMMDD 형식의 날짜 (예: 230315)", required = true) 
             @PathVariable String tdDate,
-            @ApiIgnore HttpSession se) {
+            HttpSession se) {
         String sessionId = (String) se.getAttribute("sessionId");
         int tdId = ts.tdIdSearch(tdDate, sessionId);
         List<SubTodoListDTO> list = ts.getMemo(tdId);
         
         if (list.isEmpty()) {
-            //ts.inputRow(tdDate, sessionId);
+            ts.inputRow(tdDate, sessionId);
             tdId = ts.tdIdSearch(tdDate, sessionId);
             list = ts.getMemo(tdId);
         }
@@ -156,7 +157,7 @@ public class TodoListController {
     public double getProgress(
             @ApiParam(value = "YYMMDD 형식의 날짜 (예: 230315)", required = true) 
             @PathVariable String tdDate,
-            @ApiIgnore HttpSession se) {
+            HttpSession se) {
         String sessionId = (String) se.getAttribute("sessionId");
         int tdId = ts.tdIdSearch(tdDate, sessionId);
         double progress = ts.todoProgress(tdId);
@@ -167,7 +168,7 @@ public class TodoListController {
     @ApiOperation(value = "테스트용 저장 기능", 
                   notes = "테스트를 위한 저장 기능입니다. (현재 주석 처리되어 있음)")
     @GetMapping(value = "/testSaveDetail", produces = "application/json; charset=utf-8")
-    public void testSave(@ApiIgnore HttpSession se) {
+    public void testSave(HttpSession se) {
         // ts.saveArchiveDetail();
     }
 }
