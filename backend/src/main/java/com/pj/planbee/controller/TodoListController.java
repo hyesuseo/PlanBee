@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pj.planbee.config.CacheConfig;
 import com.pj.planbee.dto.TDdetailDTO;
 import com.pj.planbee.dto.TodoDashboardDTO;
 import com.pj.planbee.dto.TodoListDTO;
@@ -36,26 +37,45 @@ import io.swagger.annotations.ApiParam;
 @CrossOrigin(origins="http://localhost:3000", allowCredentials ="true")
 public class TodoListController {
 
-    @Autowired
-    TodoListService ts;
+	private final TodoListService ts;
+	private final CacheConfig cacheConfig;
+
+
+	public TodoListController(TodoListService ts, CacheConfig cacheConfig) {
+		this.cacheConfig = cacheConfig;
+		this.ts = ts;
+	}
 
     @GetMapping(value = "/dashBoard/{tdDate}", produces = "application/json; charset=utf-8")
     public TodoDashboardDTO dashboardData(@PathVariable String tdDate, HttpSession se) {
     	String sessionId = (String) se.getAttribute("sessionId");
     	System.out.println("todolist sessionId" + sessionId);
     	TodoDashboardDTO dashboard = new TodoDashboardDTO();
-    	
     	int todoId;
-    	//열이 있는지 확인한다
-    	int result = ts.checkRow(tdDate, sessionId);
-    	System.out.println("해당날짜에 해당하는 열번호"+ result);
-    	if(result == 0) { //열이 없으면 한 열을 입력하고 그 결과를 반환한다.
-    		ts.inputRow(tdDate, sessionId);
-    		todoId = ts.tdIdSearch(tdDate, sessionId);
-    	}else { //열이 있으면 그 결과값을 반환한다.
-    		todoId = result;
+    	//1. 캐시에서 먼저 검색한다
+    	Integer savedId = cacheConfig.getTodoIdCache(sessionId, tdDate);
+    	
+    	//2. 캐시값이 null이 아니면, 그 캐시에 해당하는 todoId를 불러옴
+    	if ( savedId != null ) { 
+    		todoId = savedId;
+    		System.out.println("캐시에 존재하는 값"+ todoId);
+    	} else {
+    		//3. 캐시값이 null이면 checkRow를 수행한다.
+    		int result = ts.checkRow(tdDate, sessionId);
+        	System.out.println("해당날짜에 해당하는 열번호"+ result);
+        	if(result == 0) { //열이 없으면 한 열을 입력하고 그 결과를 반환한다.
+        		ts.inputRow(tdDate, sessionId);
+        		todoId = ts.tdIdSearch(tdDate, sessionId);
+        	}else { //열이 있으면 그 결과값을 반환한다.
+        		todoId = result;
+        	}
+        	//null인 경우 열 검색다 하고 캐시에 저장도 한다.
+        	cacheConfig.putTodoIdCache(sessionId, tdDate, todoId);
+        	System.out.println("캐시에 저장 완료" + todoId);
     	}
-    	dashboard.setTodoId(result);
+    	
+    	
+    	dashboard.setTodoId(todoId);
     	
     	//todoDetail들을 리스트 형식으로 가져온다.
     	List<TDdetailDTO> list = ts.getTodo(todoId); //한 줄로 쓰는게 더 개선된 부분이라고 함
@@ -73,8 +93,8 @@ public class TodoListController {
         
     return dashboard;
     }
-    @GetMapping(value = "/getTodo/{tdDate}", produces = "application/json; charset=utf-8")
-    public List<TDdetailDTO> getToday(
+    @GetMapping(value = "/getTodo/{tdDate}", produces = "application/json; charset=utf-8") 
+    public List<TDdetailDTO> getToday(//getTodo삭제
             @ApiParam(value = "YYMMDD 형식의 날짜 (예: 230315)", required = true) 
             @PathVariable String tdDate,
             HttpSession se) {
@@ -167,7 +187,7 @@ public class TodoListController {
     @ApiOperation(value = "투두리스트 진척도 조회", 
                   notes = "YYMMDD 형식의 날짜를 입력받아 해당 날짜의 투두리스트 진척도를 계산하여 반환합니다.")
     @GetMapping(value = "/progress/{tdDate}", produces = "application/json; charset=utf-8")
-    public double getProgress(
+    public double getProgress( //getProgress도 삭제
             @ApiParam(value = "YYMMDD 형식의 날짜 (예: 230315)", required = true) 
             @PathVariable String tdDate,
             HttpSession se) {

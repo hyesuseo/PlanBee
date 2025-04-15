@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.management.RuntimeErrorException;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,7 @@ public HashMap<String, String> checkToday() { //오늘과 내일 날짜값을 St
 	todayTomo.put("yesterdayStr", yesterdayStr);
 	return todayTomo;
 }
+@Transactional
 public int checkRow(String tdDate, String sessionId) { //열이 있는지 확인하는 메소드
 	//순환문을 돌리면서 값이 있는지 확인한다.
 	List<TDstartDTO> dateId = new ArrayList<TDstartDTO>();
@@ -69,6 +71,7 @@ public int checkRow(String tdDate, String sessionId) { //열이 있는지 확인
 	
 	return selectedtdId;
 }
+@Transactional
 @Override
 public void inputRow(String tdDate, String sessionId) { //
 	if (sessionId == null || sessionId.trim().isEmpty()){
@@ -80,6 +83,7 @@ public void inputRow(String tdDate, String sessionId) { //
 			tlMap.dateWrite(tdDate, sessionId); //열을 작성함	
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException("DB작업 실패", e);
 		}
 		
 	}
@@ -88,7 +92,7 @@ public void inputRow(String tdDate, String sessionId) { //
 }
 
 
-
+@Transactional
 public int tdIdSearch(String tdDate, String sessionId) { //날짜와 아이디에 해당하는 tdId를 써치하는 메소드
 	List<TDstartDTO> dateId = tlMap.getDate(sessionId);
 	//System.out.println("service: "+dateId.get(3).getTodo_Id());
@@ -103,12 +107,13 @@ public int tdIdSearch(String tdDate, String sessionId) { //날짜와 아이디�
 }
 
 @Override
+@Transactional
 public List<TDdetailDTO> getTodo(int tdId) { //하루의 투두리스트를 가져오는 기능, 위에서 반환한 todolist고유 아이디로 가져옴
 	List<TDdetailDTO> list = new ArrayList<TDdetailDTO>();
 	list = tdMap.getTodo(tdId); 
 	return list;
 }
-
+@Transactional
 @Override //투두리스트 작성기능에 if 문 사용해서 todolist 값이 없으면 입력하는 기능을 만들어야함! 
 public int todoWrite(TDdetailDTO dto) { //투두리스트 작성하는 기능, 성공시 결과값은 1
 	
@@ -117,7 +122,7 @@ public int todoWrite(TDdetailDTO dto) { //투두리스트 작성하는 기능, �
 		try {
 			result = tdMap.todoWrite(dto);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException("DB 작업실패", e);
 		}
 		if(result ==1) {
 			tlMap.getLatest();
@@ -128,6 +133,7 @@ public int todoWrite(TDdetailDTO dto) { //투두리스트 작성하는 기능, �
 }
 
 @Override
+@Transactional
 public int updateState(int tdDetailId, boolean state) {  //투두리스트 작업상태 업데이트 하는 기능
 	//완료시 True혹은 t, 기본값은 False혹은 f
 	int result =0;
@@ -136,21 +142,24 @@ public int updateState(int tdDetailId, boolean state) {  //투두리스트 작�
 		System.out.println(result);
 	} catch (Exception e) {
 		e.printStackTrace();
+		throw new RuntimeException("DB작업 실패", e);
 	}
 	return result;
 }
 
 @Override
+@Transactional
 public int todoModify(TDdetailDTO dto) { //투두리스트 자체 수정기능
 	int result = 0;
 	try {
 		result = tdMap.todoModify(dto);
 	} catch (Exception e) {
 		e.printStackTrace();
+		throw new RuntimeException("DB작업 실패", e);
 	}
 	return result;
 }
-
+@Transactional
 @Override
 public int todoDel(int tdDetailId) { //투두리스트 한 개 삭제하는 기능
 	int result = 0;
@@ -158,6 +167,7 @@ public int todoDel(int tdDetailId) { //투두리스트 한 개 삭제하는 기�
 		result = tdMap.todoDel(tdDetailId);
 	} catch (Exception e) {
 		e.printStackTrace();
+		throw new RuntimeException("DB작업 실패", e);
 	}
 	return result;
 }
@@ -182,6 +192,7 @@ public double todoProgress(int tdId) {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException("DB작업 실패", e);
 		}
 	}
 	
@@ -197,10 +208,11 @@ public String getMemo(int tdId) {
 		//System.out.println("ser:"+ list);
 	} catch (Exception e) {
 		e.printStackTrace();
+		throw new RuntimeException("DB작업 실패", e);
 	}
 	return memo;
 }
-
+@Transactional
 @Override
 public int memoWrite(TodoListDTO listDto) {
 	int result = 0;
@@ -208,6 +220,7 @@ public int memoWrite(TodoListDTO listDto) {
 		result = tlMap.memoWrite(listDto);
 	} catch (Exception e) {
 		e.printStackTrace();
+		throw new RuntimeException("DB작업 실패", e);
 	}
 	return result;
 }
@@ -220,6 +233,7 @@ public String dateSearch(int tdId) {
 		date = tlMap.dateSearch(tdId);
 	} catch (Exception e) {
 		e.printStackTrace();
+		throw new RuntimeException("DB작업 실패", e);
 	}
 	return date;
 }
@@ -232,8 +246,9 @@ public int regiProgress(int tdId, double progress) {
 		result = tlMap.regiProgress(tdId, progress);
 	} catch (Exception e) {
 		e.printStackTrace();
+		throw new RuntimeException("DB작업 실패", e);
 	}
-	return 0;
+	return result;
 }
 @Override
 public int getTdDetailId(String tdDetail, int tdId) {
@@ -245,6 +260,7 @@ public int getTdDetailId(String tdDetail, int tdId) {
 
 
 @Override
+@Transactional
 public int saveArchive() {
 	
 	String yesterday = checkToday().get("yesterdayStr"); //어제날짜를 yyMMdd로 변환
@@ -258,6 +274,7 @@ public int saveArchive() {
 			result = saMap.toArchive(todolist);//list에 담은 어제 값을 archive로 저장하는 기능
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException("DB작업 실패", e);
 		}
 		System.out.println("service Impl 성공여부" + result);
 	}else {
@@ -313,7 +330,7 @@ public int saveArchiveDetail() {
    } catch (Exception e) {
       e.printStackTrace();
       System.out.println("오류발생");
-      throw e;
+      throw new RuntimeException("DB작업 실패", e);
    }
    
    

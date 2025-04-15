@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.pj.planbee.dto.BoardDTO;
 import com.pj.planbee.dto.GroupInfoDTO;
@@ -31,6 +32,7 @@ public class BoardServiceImpl implements BoardService{
 
 	//게시글 보기
 	@Override
+	@Transactional
 	public BoardDTO getView(int postId) {
 		
 		BoardDTO dto = null;
@@ -44,18 +46,21 @@ public class BoardServiceImpl implements BoardService{
 
 	//게시글 작성
 	@Override
+	@Transactional
 	public int writePost(BoardDTO dto) {
 		int result = 0;
 		try {
 			result = btMap.writePost(dto);
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException("DB 오류 발생", e);
 		}
 		return result;
 	}
 
 	//게시글 수정
 	@Override
+	@Transactional
 	public int boardModify(BoardDTO dto, String sessionId, int postId) {
 		int result = 0;
 		String writer = btMap.getWriter(postId);
@@ -65,6 +70,7 @@ public class BoardServiceImpl implements BoardService{
 				result = btMap.boardModify(dto);
 			} catch (Exception e) {
 				e.printStackTrace();
+				throw new RuntimeException("DB 오류 발생", e);
 			}
 		}else {
 			result = -1;
@@ -75,6 +81,7 @@ public class BoardServiceImpl implements BoardService{
 
 	// 게시글 삭제
 	@Override
+	@Transactional
 	public int boardDel(int postId, String sessionId) {
 		String writer = btMap.getWriter(postId);
 		int result = 0; 
@@ -83,6 +90,7 @@ public class BoardServiceImpl implements BoardService{
 				result = btMap.boardDel(postId);
 			} catch (Exception e) {
 				e.printStackTrace();
+				throw new RuntimeException("DB 오류 발생", e);
 			}
 		}else {
 			result = -1;
@@ -93,18 +101,21 @@ public class BoardServiceImpl implements BoardService{
 	
 	// 조회수 증가
 	@Override
+	@Transactional
 	public int boardHit(int postId) {
 		int result = 0;
 		try {
 			result = btMap.boardHit(postId);
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException("DB 오류 발생", e);
 		}
 		return result;
 	}
 
 	// 게시글이랑 같이 보낼 그룹 정보
 	@Override
+	@Transactional
 	public GroupInfoDTO boardGroup(int groupId) {
 	    List<PostListDTO> posts = new ArrayList<>();
 	    String groupName = "";
@@ -122,6 +133,7 @@ public class BoardServiceImpl implements BoardService{
 
 	    } catch (Exception e) {
 	        e.printStackTrace();
+	        throw new RuntimeException("DB 오류 발생", e);
 	    }
 
 	    return new GroupInfoDTO(groupName, groupMemberCount, posts);
@@ -129,6 +141,7 @@ public class BoardServiceImpl implements BoardService{
 
 	// 내가 쓴 글 조회
 	@Override
+	@Transactional
 	public GroupInfoDTO boardUser(String userId) {
 		List<PostListDTO> posts = new ArrayList<>();
 	    String groupName = "";
@@ -146,6 +159,7 @@ public class BoardServiceImpl implements BoardService{
 
 	    } catch (Exception e) {
 	        e.printStackTrace();
+	        throw new RuntimeException("DB 오류 발생", e);
 	    }
 
 	    return new GroupInfoDTO(groupName, groupMemberCount, posts);
@@ -170,6 +184,7 @@ public class BoardServiceImpl implements BoardService{
 
 		    } catch (Exception e) {
 		        e.printStackTrace();
+		        throw new RuntimeException("DB 오류 발생", e);
 		    }
 
 		    return new GroupInfoDTO(groupName, groupMemberCount, posts);
@@ -194,6 +209,7 @@ public class BoardServiceImpl implements BoardService{
 
 		    } catch (Exception e) {
 		        e.printStackTrace();
+		        throw new RuntimeException("DB 오류 발생", e);
 		    }
 
 		    return new GroupInfoDTO(groupName, groupMemberCount, posts);
@@ -218,6 +234,7 @@ public class BoardServiceImpl implements BoardService{
 
 		    } catch (Exception e) {
 		        e.printStackTrace();
+		        throw new RuntimeException("DB 오류 발생", e);
 		    }
 
 		    return new GroupInfoDTO(groupName, groupMemberCount, posts);
@@ -249,6 +266,7 @@ public class BoardServiceImpl implements BoardService{
 
 	    } catch (Exception e) {
 	        e.printStackTrace();
+	        throw new RuntimeException("DB 오류 발생", e);
 	    }
 
 	    return new GroupInfoDTO(groupName, groupMemberCount, posts);
@@ -273,6 +291,7 @@ public class BoardServiceImpl implements BoardService{
 
 	    } catch (Exception e) {
 	        e.printStackTrace();
+	        throw new RuntimeException("DB 오류 발생", e);
 	    }
 
 	    return new GroupInfoDTO(groupName, groupMemberCount, posts);
@@ -291,6 +310,7 @@ public class BoardServiceImpl implements BoardService{
 	        groupMemberCount = btMap.getGroupMemberCount(groupId);
 	    } catch (Exception e) {
 	        e.printStackTrace();
+	        throw new RuntimeException("DB 오류 발생", e);
 	    }
 
 	    return new GroupInfoDTO(groupName, groupMemberCount, posts);
@@ -345,6 +365,7 @@ public class BoardServiceImpl implements BoardService{
 
 	    } catch (Exception e) {
 	        e.printStackTrace();
+	        throw new RuntimeException("DB 오류 발생", e);
 	    }
 
 	    return new GroupInfoDTO(groupName, groupMemberCount, posts == null ? new ArrayList<>() : posts);

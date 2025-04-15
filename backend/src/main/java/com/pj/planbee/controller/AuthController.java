@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,14 +51,21 @@ public class AuthController {
                   notes = "TempUserDTO 객체를 받아 이메일 인증 코드를 발송합니다. " +
                           "반환값은 결과 코드로, -1: 이미 가입된 ID, -2: 이미 가입된 이메일, " +
                           "양수: 인증 코드 발송 성공, 0: 알 수 없는 오류를 의미합니다.")
+    @Transactional
     @PostMapping(value = "/email/send", produces = "application/json; charset=utf-8")
     public int sendVerificationCode(
             @ApiParam(value = "임시 사용자 정보 (TempUserDTO)", required = true) @RequestBody TempUserDTO dto) {
-        int result = tempUserService.insertOrUpdateTempUser(dto);
-        if (result == -1) return result; // 이미 가입된 ID
-        else if (result == -2) return result; // 이미 가입된 이메일
-        else if (result > 0) return result; // 이메일 인증 코드 발송 성공
-        else return 0; // 알 수 없는 오류
+        try {
+        	int result = tempUserService.insertOrUpdateTempUser(dto);
+        	if (result == -1) return result; // 이미 가입된 ID
+            else if (result == -2) return result; // 이미 가입된 이메일
+            else if (result > 0) return result; // 이메일 인증 코드 발송 성공
+            else return 0; // 알 수 없는 오류
+		} catch (Exception e) {
+			throw new RuntimeException("이메일 전송 시 오류발생", e);
+		}
+    	
+        
     }
 
     @ApiOperation(value = "이메일 인증 코드 확인", 
@@ -115,7 +123,6 @@ public class AuthController {
     public int login(
             @ApiParam(value = "로그인 정보 (LoginDTO: userId, userPw)", required = true) @RequestBody LoginDTO loginDTO,
             HttpSession session, HttpServletResponse response) {
-    	System.out.println("로그인 컨트롤러 진입");
         String userId = loginDTO.getUserId();
         String userPw = loginDTO.getUserPw();
         System.out.println("로그인DTO" + loginDTO);

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.management.RuntimeErrorException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +22,15 @@ public class ProgressServiceImpl implements ProgressService {
 
     @Override
     public ProgressShareDTO getDailyProgress(String userId, String date) {
-        int total = pm.getTotalTasks(userId, date);
-        int completed = pm.getCompletedTasks(userId, date);
-        return new ProgressShareDTO(userId, date, completed, total);
+    	try {
+    		int total = pm.getTotalTasks(userId, date);
+            int completed = pm.getCompletedTasks(userId, date);
+            return new ProgressShareDTO(userId, date, completed, total);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+        
     }
 
     @Override
@@ -55,40 +63,46 @@ public class ProgressServiceImpl implements ProgressService {
     
     @Override
     public String getWeeklyProgress(String userId) {
-        // 오늘 날짜 계산 (YYMMDD 형식)
-        LocalDate today = LocalDate.now();
-        String endDate = today.format(DateTimeFormatter.ofPattern("yyMMdd"));
-        String startDate = today.minusDays(6).format(DateTimeFormatter.ofPattern("yyMMdd"));
+    	try {
+    		// 오늘 날짜 계산 (YYMMDD 형식)
+            LocalDate today = LocalDate.now();
+            String endDate = today.format(DateTimeFormatter.ofPattern("yyMMdd"));
+            String startDate = today.minusDays(6).format(DateTimeFormatter.ofPattern("yyMMdd"));
 
-        // DB에서 7일간의 데이터 가져오기
-        List<Map<String, Object>> weeklyData = pm.getWeeklyProgress(userId, startDate, endDate);
+            // DB에서 7일간의 데이터 가져오기
+            List<Map<String, Object>> weeklyData = pm.getWeeklyProgress(userId, startDate, endDate);
 
-        // 날짜 리스트 및 퍼센트 리스트 생성
-        List<String> dates = new ArrayList<>();
-        List<Integer> percentages = new ArrayList<>();
+            // 날짜 리스트 및 퍼센트 리스트 생성
+            List<String> dates = new ArrayList<>();
+            List<Integer> percentages = new ArrayList<>();
 
-        // 주어진 날짜 범위 내에서 데이터를 채우기 위해 기본값을 설정
-        for (int i = 0; i < 7; i++) {
-            String date = today.minusDays(6 - i).format(DateTimeFormatter.ofPattern("MM-dd")); // ✅ 변경된 부분 (MM-DD 형식)
-            dates.add(date);
-            percentages.add(0); // 기본값: 0%
-        }
-
-        // DB에서 가져온 데이터 반영
-        for (Map<String, Object> data : weeklyData) {
-            String date = data.get("todo_date").toString().substring(2, 4) + "-" + data.get("todo_date").toString().substring(4, 6); // ✅ YYMMDD → MM-DD 변환
-            int total = Integer.parseInt(data.get("total_tasks").toString());
-            int completed = Integer.parseInt(data.get("completed_tasks").toString());
-            int percentage = (total > 0) ? (int) ((completed / (double) total) * 100) : 0;
-
-            // 날짜 리스트에서 해당 날짜의 인덱스 찾아서 퍼센트 업데이트
-            int index = dates.indexOf(date);
-            if (index != -1) {
-                percentages.set(index, percentage);
+            // 주어진 날짜 범위 내에서 데이터를 채우기 위해 기본값을 설정
+            for (int i = 0; i < 7; i++) {
+                String date = today.minusDays(6 - i).format(DateTimeFormatter.ofPattern("MM-dd")); // ✅ 변경된 부분 (MM-DD 형식)
+                dates.add(date);
+                percentages.add(0); // 기본값: 0%
             }
-        }
 
-        return generateWeeklyProgressHTML(userId, dates, percentages);
+            // DB에서 가져온 데이터 반영
+            for (Map<String, Object> data : weeklyData) {
+                String date = data.get("todo_date").toString().substring(2, 4) + "-" + data.get("todo_date").toString().substring(4, 6); // ✅ YYMMDD → MM-DD 변환
+                int total = Integer.parseInt(data.get("total_tasks").toString());
+                int completed = Integer.parseInt(data.get("completed_tasks").toString());
+                int percentage = (total > 0) ? (int) ((completed / (double) total) * 100) : 0;
+
+                // 날짜 리스트에서 해당 날짜의 인덱스 찾아서 퍼센트 업데이트
+                int index = dates.indexOf(date);
+                if (index != -1) {
+                    percentages.set(index, percentage);
+                }
+            }
+
+            return generateWeeklyProgressHTML(userId, dates, percentages);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+        
     }
 
 

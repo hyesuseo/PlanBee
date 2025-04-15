@@ -17,7 +17,7 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired TempUserService tus;
 	
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public int regiseterUser(UserDTO user) {
 	    int result = 0;
@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService{
 
 	    } catch (Exception e) {
 	        e.printStackTrace();
+	        return -99; //예외발생 코드
 	    }
 	    return result;
 	}

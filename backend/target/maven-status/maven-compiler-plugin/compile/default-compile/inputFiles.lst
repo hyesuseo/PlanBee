@@ -24,6 +24,7 @@ C:\Users\Hyesu Seo\workspace\PlanBee_hyesu_develop\PlanBee\backend\src\main\java
 C:\Users\Hyesu Seo\workspace\PlanBee_hyesu_develop\PlanBee\backend\src\main\java\com\pj\planbee\mapper\ProgressMapper.java
 C:\Users\Hyesu Seo\workspace\PlanBee_hyesu_develop\PlanBee\backend\src\main\java\com\pj\planbee\dto\BoardDTO.java
 C:\Users\Hyesu Seo\workspace\PlanBee_hyesu_develop\PlanBee\backend\src\main\java\com\pj\planbee\config\LoginCheckInterceptor.java
+C:\Users\Hyesu Seo\workspace\PlanBee_hyesu_develop\PlanBee\backend\src\main\java\com\pj\planbee\dto\TodoDashboardDTO.java
 C:\Users\Hyesu Seo\workspace\PlanBee_hyesu_develop\PlanBee\backend\src\main\java\com\pj\planbee\dto\UserDTO.java
 C:\Users\Hyesu Seo\workspace\PlanBee_hyesu_develop\PlanBee\backend\src\main\java\com\pj\planbee\mapper\GroupMapper.java
 C:\Users\Hyesu Seo\workspace\PlanBee_hyesu_develop\PlanBee\backend\src\main\java\com\pj\planbee\service\GroupServiceImpl.java

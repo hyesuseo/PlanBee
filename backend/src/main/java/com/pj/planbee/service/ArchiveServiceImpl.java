@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.pj.planbee.config.CacheConfig;
 import com.pj.planbee.dto.ArchiveDTO;
@@ -16,6 +17,7 @@ public class ArchiveServiceImpl implements ArchiveService {
     @Autowired CacheConfig cacheConfig;  // Bean으로 주입
 
     @Override
+    @Transactional(readOnly=true)
     public List<ArchiveDTO> getPagedArchives(String userId, int offset, int limit) {
         String cacheKey = userId + "_page_" + offset;  // 캐시 키 (페이지 기준)
         List<ArchiveDTO> cachedData = cacheConfig.getCache(cacheKey);  // 주입받은 객체 사용
@@ -36,16 +38,19 @@ public class ArchiveServiceImpl implements ArchiveService {
     }
 
     @Override
+    @Transactional
     public List<ArchiveDTO> searchArchivesByDate(String userId, String date) {
         return mapper.findArchivesByDate(userId, date);
     }
 
     @Override
+    @Transactional
     public List<ArchiveDTO> searchByDetail(String userId, String keyword) {
         return mapper.searchByDetail(userId, keyword);
     }
     
     @Override
+    @Transactional
     public List<ArchiveDTO> searchArchives(String userId, String searchType, String query) {
         if ("date".equalsIgnoreCase(searchType)) {
             return searchArchivesByDate(userId, query);

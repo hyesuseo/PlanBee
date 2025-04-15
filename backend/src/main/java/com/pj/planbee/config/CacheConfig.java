@@ -11,7 +11,8 @@ import com.pj.planbee.dto.ArchiveDTO;
 
 @Component
 public class CacheConfig {
-
+	
+	//Archive 페이지 cache
     public static final int CACHE_SIZE = 30;
 
     // 동시성 해결
@@ -53,4 +54,36 @@ public class CacheConfig {
             cacheLock.unlock();
         }
     }
+    
+    //todoList의 todoId에 대한 캐시
+    private final Map<String, Integer> todoIdCache = new ConcurrentHashMap<String, Integer>();
+    private final ReentrantLock todoIdCacheLock = new ReentrantLock();
+    
+    public void putTodoIdCache(String sessionId, String tdDate, int todoId) {
+    	String key = sessionId + "_" + tdDate; //캐시 키 생성
+    	todoIdCacheLock.lock(); // 동기화를 위한 lock, 나만 접근할 수 있도록 문 잠그는 것
+    	try {
+			todoIdCache.put(key, todoId); //캐시에 저장
+			System.out.println(key +"캐시 추가");
+		} finally {
+			todoIdCacheLock.unlock(); //작업 완료되었으면 해제, unlock안하면 다른스레드는 영원히 들어갈 수 없음
+		}
+    }
+    //캐시에서 값을 가져오는 메서드 	
+    public Integer getTodoIdCache(String sessionId, String tdDate) {
+    	    String key = sessionId + "_" + tdDate;
+    	    return todoIdCache.get(key);
+    	}
+    
+    //캐시 전체를 초기화하는 메서드 
+    public void clearTodoIdCache() {
+    	   todoIdCacheLock.lock(); //캐시 전체 접근이므로 lock 사용
+    	    try {
+    	        todoIdCache.clear();
+    	        System.out.println("todoId 캐시 초기화 완료!");
+    	    } finally {
+    	        todoIdCacheLock.unlock();
+    	    }
+    	}  
+    
 }

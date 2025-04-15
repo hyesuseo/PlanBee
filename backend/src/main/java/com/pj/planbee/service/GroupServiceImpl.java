@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.pj.planbee.dto.GroupDTO;
 import com.pj.planbee.mapper.GroupMapper;
@@ -18,6 +19,7 @@ public class GroupServiceImpl implements GroupService {
 	    }
 
 	    @Override
+	    @Transactional
 	    public int joinGroup(String userId, int groupId) {
 	        if (mapper.isUserInGroup(userId, groupId) == 0) { // 가입 여부 체크
 	            mapper.joinGroup(userId, groupId);
@@ -28,11 +30,17 @@ public class GroupServiceImpl implements GroupService {
 
 	    @Override
 	    public int leaveGroup(String userId, int groupId) {
-	        if (mapper.isUserInGroup(userId, groupId) > 0) { // 가입 여부 체크
-	            mapper.leaveGroup(userId, groupId);
-	            return 1; //탈퇴 성공
-	        }
-	        return 0; // 가입되지 않은 경우
+	        try {
+	        	if (mapper.isUserInGroup(userId, groupId) > 0) { // 가입 여부 체크
+		            mapper.leaveGroup(userId, groupId);
+		            return 1; //탈퇴 성공
+	        	}
+	        	return 0; //가입되지 않은 경우
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new RuntimeException("그룹 탈퇴 중 오류 발생");
+			}
+	    	
 	    }
 	    
 	    @Override

@@ -36,7 +36,7 @@
 	</servlet-mapping>
 	
 	<session-config>
-    	<session-timeout>60</session-timeout> <!-- 단위: 분 -->
+    	<session-timeout>30</session-timeout> <!-- 단위: 분 -->
     	<cookie-config>
         <path>/</path>
     </cookie-config>

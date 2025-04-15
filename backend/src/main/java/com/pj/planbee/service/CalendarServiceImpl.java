@@ -87,6 +87,7 @@ public class CalendarServiceImpl implements CalendarService {
 	}
 
 	@Override
+	@Transactional
 	public int addMemo(CalendarDTO calendar) {
 	    try {
 	        int result = calMap.addMemo(calendar); // DB에 삽입 실행
@@ -98,6 +99,7 @@ public class CalendarServiceImpl implements CalendarService {
 	}
 
 	@Override
+	@Transactional
 	public int modiMemo(CalendarDTO calendar) {
 	    try {
 	        int result = calMap.modiMemo(calendar); // DB에서 업데이트 실행
@@ -110,6 +112,7 @@ public class CalendarServiceImpl implements CalendarService {
 
 	
 	@Override
+	@Transactional
 	public int delMemo(int calId, int fieldNo) {
 		Map<String, Object> params = new HashMap<>();
 	    params.put("calId", calId);

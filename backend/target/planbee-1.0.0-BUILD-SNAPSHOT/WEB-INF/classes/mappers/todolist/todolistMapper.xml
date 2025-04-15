@@ -28,8 +28,8 @@
     </insert>
 
     <!-- 메모 조회 -->
-    <select id="getMemo" resultType="com.pj.planbee.dto.TodoListDTO$SubTodoListDTO">
-        SELECT todo_id, todo_memo FROM ToDoList WHERE todo_id = #{tdId}
+    <select id="getMemo">
+        SELECT todo_memo FROM ToDoList WHERE todo_id = #{tdId}
     </select>
 
     <!-- 메모 수정 -->
