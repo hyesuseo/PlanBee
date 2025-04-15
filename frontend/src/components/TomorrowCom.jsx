@@ -17,26 +17,36 @@ const TomorrowCom = () => {
   const [tomorrowTdId, setTomorrowTdId] = useState(null);
   const [editItem, setEditItem] = useState(null);
   const formatTime = (time) => {
-    const strTime = time.toString();
-    const hour = strTime.slice(0, -2);
-    const minute = strTime.slice(-2);
-
+    if (typeof time === "number") {
+      time = time.toString().padStart(4, "0"); // 900 → "0900"
+    } else if (typeof time === "string") {
+      time = time.padStart(4, "0"); // "900" → "0900"
+    } else {
+      return ""; // 예외 처리 (undefined 등)
+    }
+  
+    const hour = time.slice(0, 2);
+    const minute = time.slice(2);
+  
     return `${hour}:${minute}`;
   };
+  
 
   useEffect(() => {
     //checklist 불러오는 함수 -> 세션연결 성공, 테스트완료
-    const fetchTodoDetails = async () => {
+    const fetchDashBoard = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/planbee/todolist/getTodo/${getFormattedTomorrowYYMMDD()}`,
+          `http://localhost:8080/planbee/todolist/dashBoard/${getFormattedTomorrowYYMMDD()}`,
           {
             withCredentials: true,
           }
         );
-        if (Array.isArray(response.data)) {
-          setTodoDetailsTomorrow(response.data);
-          setTomorrowTdId(response.data[0].tdId);
+        console.log("내일Dashboard",response.data);
+        if (Array.isArray(response.data.todoList)) {
+          setTodoDetailsTomorrow(response.data.todoList);
+          setTomorrowTdId(response.data.todoId);
+          setMemo(response.data.memo);
         } else {
           console.error("오늘의 데이터 에러", response.data);
         }
@@ -46,27 +56,7 @@ const TomorrowCom = () => {
     };
 
     //memo 불러오는 함수 -> 세션연결 성공, 테스트완료
-    const fetchMemo = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/planbee/todolist/getMemo/${getFormattedTomorrowYYMMDD()}`,
-          {
-            withCredentials: true,
-          }
-        );
-        console.log(response.data);
-        if (Array.isArray(response.data) && response.data.length > 0) {
-          setMemo(response.data[0].tdMemo); // 배열에서 tdMemo만 추출하여 설정
-        } else {
-          console.error("메모 데이터 형식 오류", response.data);
-        }
-      } catch (error) {
-        console.error("메모 데이터 fetch 에러", error);
-      }
-    };
-
-    fetchTodoDetails();
-    fetchMemo();
+    fetchDashBoard();
   }, []);
 
   //todolist 체크박스 상태 변경 함수
@@ -124,6 +114,7 @@ const TomorrowCom = () => {
             : todo
         )
       );
+      setEditItem(null);
     } catch (error) {
       console.error("TD 수정 실패", error);
     }
@@ -172,7 +163,12 @@ const TomorrowCom = () => {
       console.log("서버에서 받은 응답:", response.data);
       if (response.data && response.data.tdDetailId) {
         // 서버 응답을 기반으로 상태 업데이트
-        setTodoDetailsTomorrow((prev) => [...prev, response.data]);
+        setTodoDetailsTomorrow((prev) => [...prev, 
+          {...response.data,
+            tdDetail: newTask.tdDetail,
+            tdDetailTime: newTask.tdDetailTime,
+      },
+    ]);
       } else {
         console.error("서버 응답에 tdDetailId가 없습니다:", response.data);
       }

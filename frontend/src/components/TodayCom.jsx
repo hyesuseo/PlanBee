@@ -6,7 +6,7 @@ import {
 import axios from "axios";
 import "../css/TodayCom.css";
 
-const TodayCom = () => {
+const TodayCom = ({setProgress}) => {
   const [todoDetailsToday, setTodoDetailsToday] = useState([]);
   const [memo, setMemo] = useState("");
   const [isEditingMemo, setIsEditingMemo] = useState(false);
@@ -16,18 +16,37 @@ const TodayCom = () => {
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [todayTdId, setTodayTdId] = useState(null);
   const [editItem, setEditItem] = useState(null);
+  const formatTime = (time) => {
+    if (typeof time === "number") {
+      time = time.toString().padStart(4, "0"); // 900 → "0900"
+    } else if (typeof time === "string") {
+      time = time.padStart(4, "0"); // "900" → "0900"
+    } else {
+      return ""; // 예외 처리 (undefined 등)
+    }
+  
+    const hour = time.slice(0, 2);
+    const minute = time.slice(2);
+  
+    return `${hour}:${minute}`;
+  };
 
-  const fetchTodoDetails = async () => {
+  const fetchDashBoard = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/planbee/todolist/getTodo/${getFormattedTodayYYMMDD()}`,
+        `http://localhost:8080/planbee/todolist/dashBoard/${getFormattedTodayYYMMDD()}`,
         {
           withCredentials: true,
         }
       );
-      if (Array.isArray(response.data)) {
-        setTodoDetailsToday(response.data);
-        setTodayTdId(response.data[0].tdId);
+      if (Array.isArray(response.data.todoList)) {
+        setTodoDetailsToday(response.data.todoList);
+        setTodayTdId(response.data.todoId);
+        setMemo(response.data.memo);
+        setProgress(response.data.progress);
+        // console.log("오늘의 할일 저장됨?", todoDetailsToday)
+        // console.log("메모 저장됨?", memo)
+        // console.log("todoID?", todayTdId);
       } else {
         console.error("오늘의 데이터 에러", response.data);
       }
@@ -37,29 +56,10 @@ const TodayCom = () => {
   };
 
   //memo 불러오는 함수 -> 세션연결 성공, 테스트완료
-  const fetchMemo = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/planbee/todolist/getMemo/${getFormattedTodayYYMMDD()}`,
-        {
-          withCredentials: true,
-        }
-      );
-      console.log(response.data);
-      if (Array.isArray(response.data) && response.data.length > 0) {
-        setMemo(response.data[0].tdMemo); // 배열에서 tdMemo만 추출하여 설정
-      } else {
-        console.error("메모 데이터 형식 오류", response.data);
-      }
-    } catch (error) {
-      console.error("메모 데이터 fetch 에러", error);
-    }
-  };
 
   useEffect(() => {
-    console.log("TodayCOm 마운트")
-    fetchTodoDetails();
-    fetchMemo();
+    console.log("TodayCom 마운트")
+    fetchDashBoard();
   }, []);
 
   //todolist 체크박스 상태 변경 함수 -> 세션연결 성공, 테스트완료
@@ -118,6 +118,7 @@ const TodayCom = () => {
             : todo
         )
       );
+      setEditItem(null);
     } catch (error) {
       console.error("TD 수정 실패", error);
     }
@@ -168,10 +169,13 @@ const TodayCom = () => {
       console.log("서버에서 받은 응답:", response.data);
       if (response.data && response.data.tdDetailId) {
         // 서버 응답을 기반으로 상태 업데이트
-        setTodoDetailsToday((prev) => [...prev, response.data]);
-
-        // 새로운 데이터가 생성되었으므로 getTodo()로 최신 데이터 불러오기
-        fetchTodoDetails(); // 데이터를 새로고침해서 UI에 반영
+        setTodoDetailsToday((prev) => [...prev,
+          {
+            ...response.data,
+            tdDetail: newTask.tdDetail,
+            tdDetailTime: newTask.tdDetailTime,
+          },
+        ]);
       } else {
         console.error("서버 응답에 tdDetailId가 없습니다:", response.data);
       }
@@ -262,7 +266,7 @@ const TodayCom = () => {
                       }
                     />
                   ) : (
-                    item.tdDetailTime
+                    formatTime(item.tdDetailTime)
                   )}
                 </td>
                 <td>
