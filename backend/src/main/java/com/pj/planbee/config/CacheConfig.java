@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.pj.planbee.dto.ArchiveDTO;
@@ -84,6 +85,12 @@ public class CacheConfig {
     	    } finally {
     	        todoIdCacheLock.unlock();
     	    }
-    	}  
+    }
+    //매일 자정 캐시 삭제
+    @Scheduled(cron = "0 0 0 * * *")
+    public void autoClearTodoIdCache() {
+        clearTodoIdCache(); // 기존 메서드 호출
+        System.out.println("자정마다 todoId 캐시 자동 초기화 완료!");
+    }
     
 }
