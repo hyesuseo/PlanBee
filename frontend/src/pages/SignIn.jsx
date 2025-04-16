@@ -34,7 +34,7 @@ const SignIn = () => {
     try {
       console.log("전송할 사용자 정보:", userInfo);
       const response = await axios.post(
-        `https://wherethereis.site/planbee/auth/email/send`,
+        `https://wherethereis.site/auth/email/send`,
         userInfo
       );
 
@@ -75,7 +75,7 @@ const SignIn = () => {
       console.log(userInfo, userCode);
       const dataToSend = { ...userInfo, tempUserCode: userCode };
       const response = await axios.post(
-        `https://wherethereis.site/planbee/auth/email/verify`,
+        `https://wherethereis.site/auth/email/verify`,
         dataToSend
       );
       console.log("인증 완료!", response.data);
@@ -90,7 +90,7 @@ const SignIn = () => {
       console.log(userInfo, userCode);
       const dataToSend = { ...userInfo, tempUserCode: userCode };
       const response = await axios.post(
-        `https://wherethereis.site/planbee/auth/register`,
+        `https://wherethereis.site/auth/register`,
         dataToSend
       );
       console.log("회원가입 완료!", response.data);
@@ -121,7 +121,7 @@ const SignIn = () => {
       }
       console.log("로그인요청데이터", loginData)
       const response = await axios.post(
-        `https://wherethereis.site/planbee/auth/login`,
+        `https://wherethereis.site/auth/login`,
         loginData,
         {
           headers: { 
@@ -143,7 +143,7 @@ const SignIn = () => {
   const makeSession = async () => {
     try {
       const response = await axios.get(
-        `https://wherethereis.site/planbee/auth/session`,
+        `https://wherethereis.site/auth/session`,
         {
           withCredentials: true,
         }

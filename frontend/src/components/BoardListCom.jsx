@@ -168,7 +168,7 @@ const BoardListCom = ({ Info: infoFromProps }) => {
     // 검색어로 검색하는 코드 (검색 기준: searchType, 검색어: searchTerm)
     try {
       const response = await axios.get(
-        `https://wherethereis.site/planbee/groups/${thisGroupId}/boards?searchType=${searchType}&query=${searchTerm}`,
+        `https://wherethereis.site/groups/${thisGroupId}/boards?searchType=${searchType}&query=${searchTerm}`,
         { withCredentials: true }
       );
       console.log("검색어:", searchTerm, "검색 기준:", searchType);

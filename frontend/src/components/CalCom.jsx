@@ -21,7 +21,7 @@ const CalCom = () => {
   const getMemo = async () => {
     try {
       const response = await axios.get(
-        `https://wherethereis.site/planbee/calendar/memo/${getFormattedTodayYYMM()}`,
+        `https://wherethereis.site/calendar/memo/${getFormattedTodayYYMM()}`,
         { withCredentials: true }
       );
       console.log("캘린더 데이터", response.data);

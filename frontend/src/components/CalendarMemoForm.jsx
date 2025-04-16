@@ -37,7 +37,7 @@ const CalendarMemoForm = ({
     const getUserId = async () => {
       try {
         const response = await axios.get(
-          `https://wherethereis.site/planbee/auth/getUserId`,
+          `https://wherethereis.site/auth/getUserId`,
           {
             withCredentials: true,
           }
@@ -64,7 +64,7 @@ const CalendarMemoForm = ({
     try {
       // POST 요청으로 메모 추가
       const response = await axios.post(
-        `https://wherethereis.site/planbee/calendar/addmemo/${calDate}`,
+        `https://wherethereis.site/calendar/addmemo/${calDate}`,
         requestData,
         { withCredentials: true }
       );
@@ -93,7 +93,7 @@ const CalendarMemoForm = ({
     try {
       // PUT 요청으로 메모 수정
       const response = await axios.put(
-        `https://wherethereis.site/planbee/calendar/modimemo/${calId}`,
+        `https://wherethereis.site/calendar/modimemo/${calId}`,
         requestData,
         { withCredentials: true }
       );
@@ -115,7 +115,7 @@ const CalendarMemoForm = ({
 
     try {
       await axios.delete(
-        `https://wherethereis.site/planbee/calendar/delmemo/${calId}/${fieldNo}`,
+        `https://wherethereis.site/calendar/delmemo/${calId}/${fieldNo}`,
         { withCredentials: true }
       );
       console.log(`${fieldNo}번 메모 삭제 성공`);

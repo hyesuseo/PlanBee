@@ -22,7 +22,7 @@ const BoardWriteCom = () => {
     if (!selectedProgress || selectedProgress == null) {
       try {
         const response = await axios.post(
-          `https://wherethereis.site/planbee/groups/${thisGroupId}/boards`,
+          `https://wherethereis.site/groups/${thisGroupId}/boards`,
           {
             postTitle: postTitle,
             postContent: postContent,
@@ -51,7 +51,7 @@ const BoardWriteCom = () => {
         case "daily":
           try {
             const response = await axios.post(
-              `https://wherethereis.site/planbee/groups/${thisGroupId}/boards/daily`,
+              `https://wherethereis.site/groups/${thisGroupId}/boards/daily`,
               {},
               {
                 withCredentials: true,
@@ -72,7 +72,7 @@ const BoardWriteCom = () => {
         case "weekly":
           try {
             const response = await axios.post(
-              `https://wherethereis.site/planbee/groups/${thisGroupId}/boards/weekly`,
+              `https://wherethereis.site/groups/${thisGroupId}/boards/weekly`,
               {},
               {
                 withCredentials: true,
@@ -97,7 +97,7 @@ const BoardWriteCom = () => {
     //월간 등수 자동 글쓰기기
     try {
       const response = await axios.post(
-        `https://wherethereis.site/planbee/groups/auto-post/${thisGroupId}`,
+        `https://wherethereis.site/groups/auto-post/${thisGroupId}`,
         {
           withCredentials: true,
         }
