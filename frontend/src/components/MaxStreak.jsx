@@ -7,7 +7,7 @@ const MaxStreak = () => {
     const fetchMaxStreak = async () => {
       try {
         const response = await axios.get(
-          `https://54.116.0.74:8080/planbee/calendar/maxStreak`,
+          `https://wherethereis.site/planbee/calendar/maxStreak`,
           { withCredentials: true }
         );
         console.log(response.data);
