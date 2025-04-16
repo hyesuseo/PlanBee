@@ -11,6 +11,8 @@ import axios from "axios";
 const ToDoList = () => {
   const [progress, setProgress] = useState(null);
 
+  const isMobile = window.innerWidth <= 768;
+
   // progress 값을 기준으로 height와 background-color를 동적으로 설정하는 함수
   const getBarStyle = () => {
     if (progress === null) return { height: "0%", backgroundColor: "#ff3b3b" }; // progress가 null일 때는 스타일 적용하지 않음

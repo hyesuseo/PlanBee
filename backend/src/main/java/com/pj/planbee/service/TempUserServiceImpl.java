@@ -80,7 +80,7 @@ public class TempUserServiceImpl implements TempUserService{
 
             helper.setTo(recipientEmail);
             helper.setSubject("PlanBee 회원가입 인증 코드");
-            helper.setFrom("dlcksry0126@gmail.com", "PlanBee 메일 인증");
+            helper.setFrom("hyesuseo.dev@gmail.com", "PlanBee 메일 인증");
 
             // 이메일 본문 생성
             String htmlContent = "<html><body style='margin: 0; padding: 0;'>"

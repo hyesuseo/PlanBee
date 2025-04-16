@@ -26,7 +26,7 @@ const SignIn = () => {
   };
 
   const SendCode = async () => {
-    if (!userInfo || !userInfo.email) {
+    if (!userInfo || !userInfo.tempUserEmail) {
       alert("이메일 정보를 입력해주세요.");
       return;
     }

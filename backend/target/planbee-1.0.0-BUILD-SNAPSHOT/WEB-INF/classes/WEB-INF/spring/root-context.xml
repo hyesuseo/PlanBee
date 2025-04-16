@@ -9,13 +9,13 @@
 	<!-- Root Context: defines shared resources visible to all other web components -->
 <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
     <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
-    <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/planbee?useSSL=false&amp;serverTimezone=Asia/Seoul&amp;allowPublicKeyRetrieval=true&amp;useSSL=false" />
-    <property name="username" value="root" />
-    <property name="password" value="1234" />
+    <property name="jdbcUrl" value="jdbc:mysql://planbeerds.c14y0yi620fv.ap-northeast-2.rds.amazonaws.com:3306/planbeeRds?useSSL=false&amp;serverTimezone=Asia/Seoul&amp;allowPublicKeyRetrieval=true" />
+    <property name="username" value="planbee" />
+    <property name="password" value="WorkingBee" />
     <property name="leakDetectionThreshold" value="2000" /> <!-- 커넥션2초이상 점유시 경고메세지 출력 -->
     <property name="idleTimeout" value="30000" />
     <property name="maxLifetime" value="1800000" />
-    <property name="maximumPoolSize" value="30" />
+    <property name="maximumPoolSize" value="10" />
     <property name="minimumIdle" value="3" /> 
     <property name="connectionTimeout" value="30000" /> <!-- 커넥션 타임아웃 -->
 </bean>
@@ -46,8 +46,8 @@
       class="org.springframework.mail.javamail.JavaMailSenderImpl">
       <property name="host" value="smtp.gmail.com" />
       <property name="port" value="587" />
-      <property name="username" value="dlcksry0126@gmail.com" />
-      <property name="password" value="zwwv adkk flij jqdy" />
+      <property name="username" value="hyesuseo.dev@gmail.com" />
+      <property name="password" value="ejbw ufly xean chda" />
       <property name="javaMailProperties">
          <props>
             <prop key="mail.transport.protocol">smtp</prop>

@@ -8,18 +8,25 @@ import Board from "./pages/Board";
 import BoardDetail from "./pages/BoardDetail";
 import BoardWrite from "./pages/BoardWrite";
 
+const isMobile = window.innerWidth <= 768;
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<SignIn />} />
         <Route path="/todolist" element={<ToDoList />} />
-        <Route path="/archive" element={<Archive />} />
-        <Route path="/calendar" element={<Calendar />} />
-        <Route path="/social" element={<Social />} />
-        <Route path="/boardList/:group" element={<Board />} />
-        <Route path="/boardOne/:id" element={<BoardDetail />} />
-        <Route path="/boardWrite" element={<BoardWrite />} />
+        
+        {!isMobile && (
+          <>
+          <Route path="/archive" element={<Archive />} />
+          <Route path="/calendar" element={<Calendar />} />
+          <Route path="/social" element={<Social />} />
+          <Route path="/boardList/:group" element={<Board />} />
+          <Route path="/boardOne/:id" element={<BoardDetail />} />
+          <Route path="/boardWrite" element={<BoardWrite />} />
+          </>
+        )}
+        
         <Route path="/login" element={<SignIn />} />
       </Routes>
     </Router>
