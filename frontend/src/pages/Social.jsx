@@ -14,7 +14,7 @@ const Social = () => {
     const checkIsJoined = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/planbee/groups`,
+          `http://54.116.0.74:8080/planbee/groups`,
           {
             withCredentials: true,
           }

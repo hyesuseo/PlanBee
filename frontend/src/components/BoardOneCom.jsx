@@ -32,7 +32,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
     const getUserId = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/planbee/auth/getUserId`,
+          `http://54.116.0.74:8080/planbee/auth/getUserId`,
           {
             withCredentials: true,
           }
@@ -57,7 +57,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const fetchThisPost = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}`,
+        `http://54.116.0.74:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}`,
         { withCredentials: true }
       );
       setThisPost(response.data.post);
@@ -71,7 +71,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const handleHit = async () => {
     try {
       await axios.put(
-        `http://localhost:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/hit`,
+        `http://54.116.0.74:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/hit`,
         {},
         { withCredentials: true }
       );
@@ -88,7 +88,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const handleModifyingSave = async () => {
     try {
       await axios.put(
-        `http://localhost:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}`,
+        `http://54.116.0.74:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}`,
         {
           postTitle: editedPost.title,
           postContent: editedPost.contents,
@@ -112,7 +112,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
     if (window.confirm("삭제하시겠습니까?")) {
       try {
         await axios.delete(
-          `http://localhost:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}`,
+          `http://54.116.0.74:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}`,
           { withCredentials: true }
         );
         navigate(`/boardList/${thisGroupId.thisGroupId}`, {
@@ -131,7 +131,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const handleAddReply = async () => {
     try {
       await axios.post(
-        `http://localhost:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply`,
+        `http://54.116.0.74:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply`,
         { replyContent: comment },
         { withCredentials: true }
       );
@@ -146,7 +146,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const handleAddNestedReply = async (parentReplyId) => {
     try {
       await axios.post(
-        `http://localhost:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply/${parentReplyId}`,
+        `http://54.116.0.74:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply/${parentReplyId}`,
         { replyContent: nestedReplyContent },
         { withCredentials: true }
       );
@@ -167,7 +167,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const handleModiSaveReply = async (replyId) => {
     try {
       await axios.put(
-        `http://localhost:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply/${replyId}`,
+        `http://54.116.0.74:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply/${replyId}`,
         { replyContent: editingReplyContent },
         { withCredentials: true }
       );
@@ -187,7 +187,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const handleDeleteReply = async (replyId) => {
     try {
       await axios.delete(
-        `http://localhost:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply/${replyId}`,
+        `http://54.116.0.74:8080/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply/${replyId}`,
         { withCredentials: true }
       );
       fetchThisPost();
