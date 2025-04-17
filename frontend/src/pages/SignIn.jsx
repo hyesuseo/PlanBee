@@ -34,7 +34,7 @@ const SignIn = () => {
     try {
       console.log("전송할 사용자 정보:", userInfo);
       const response = await axios.post(
-        `https://wherethereis.site/auth/email/send`,
+        `https://wherethereis.site/planbee/auth/email/send`,
         userInfo
       );
 
