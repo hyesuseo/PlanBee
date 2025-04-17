@@ -10,7 +10,7 @@ const CurStreak = () => {
     const fetchCurStreak = async () => {
       try {
         const response = await axios.get(
-          `https://wherethereis.site/calendar/curStreak`,
+          `https://wherethereis.site/planbee/calendar/curStreak`,
           {
             withCredentials: true,
           }

@@ -37,7 +37,7 @@ const TomorrowCom = () => {
     const fetchDashBoard = async () => {
       try {
         const response = await axios.get(
-          `https://wherethereis.site/todolist/dashBoard/${getFormattedTomorrowYYMMDD()}`,
+          `https://wherethereis.site/planbee/todolist/dashBoard/${getFormattedTomorrowYYMMDD()}`,
           {
             withCredentials: true,
           }
@@ -75,7 +75,7 @@ const TomorrowCom = () => {
     );
 
     try {
-      await axios.put("https://wherethereis.site/todolist/state", {
+      await axios.put("https://wherethereis.site/planbee/todolist/state", {
         tdDetailId: changedItem.tdDetailId,
         tdId: changedItem.tdId,
         tdDetail: changedItem.tdDetail,
@@ -102,7 +102,7 @@ const TomorrowCom = () => {
     };
     try {
       const response = await axios.put(
-        `https://wherethereis.site/todolist/modify`,
+        `https://wherethereis.site/planbee/todolist/modify`,
         requestData,
         { withCredentials: true }
       );
@@ -128,7 +128,7 @@ const TomorrowCom = () => {
   //todolist 삭제 함수 -> 세션연결 성공, 테스트 완료
   const handleDeleteClick = (id) => {
     axios
-      .delete(`https://wherethereis.site/todolist/del`, {
+      .delete(`https://wherethereis.site/planbee/todolist/del`, {
         data: { tdDetailId: id },
         withCredentials: true,
       })
@@ -155,7 +155,7 @@ const TomorrowCom = () => {
 
     try {
       const response = await axios.post(
-        `https://wherethereis.site/todolist/write/${getFormattedTomorrowYYMMDD()}`,
+        `https://wherethereis.site/planbee/todolist/write/${getFormattedTomorrowYYMMDD()}`,
         newTaskData,
         { withCredentials: true }
       );
@@ -200,7 +200,7 @@ const TomorrowCom = () => {
 
     try {
       await axios.put(
-        "https://wherethereis.site/todolist/memoWrite",
+        "https://wherethereis.site/planbee/todolist/memoWrite",
         {
           tdId: tomorrowTdId,
           tdMemo: newMemo,

@@ -37,7 +37,7 @@ const CalendarMemoForm = ({
     const getUserId = async () => {
       try {
         const response = await axios.get(
-          `https://wherethereis.site/auth/getUserId`,
+          `https://wherethereis.site/planbee/auth/getUserId`,
           {
             withCredentials: true,
           }
@@ -64,7 +64,7 @@ const CalendarMemoForm = ({
     try {
       // POST 요청으로 메모 추가
       const response = await axios.post(
-        `https://wherethereis.site/calendar/addmemo/${calDate}`,
+        `https://wherethereis.site/planbee/calendar/addmemo/${calDate}`,
         requestData,
         { withCredentials: true }
       );
@@ -93,7 +93,7 @@ const CalendarMemoForm = ({
     try {
       // PUT 요청으로 메모 수정
       const response = await axios.put(
-        `https://wherethereis.site/calendar/modimemo/${calId}`,
+        `https://wherethereis.site/planbee/calendar/modimemo/${calId}`,
         requestData,
         { withCredentials: true }
       );

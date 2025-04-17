@@ -14,7 +14,7 @@ const Social = () => {
     const checkIsJoined = async () => {
       try {
         const response = await axios.get(
-          `https://wherethereis.site/groups`,
+          `https://wherethereis.site/planbee/groups`,
           {
             withCredentials: true,
           }

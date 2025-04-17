@@ -21,7 +21,7 @@ const GroupJoinPopUp = ({ groupName, onClose, groupId }) => {
   const handleJoinGroup = async () => {
     try {
       const response = await axios.post(
-        `https://wherethereis.site/groups/join?groupId=${groupId}`,
+        `https://wherethereis.site/planbee/groups/join?groupId=${groupId}`,
         {},
         {
           withCredentials: true,

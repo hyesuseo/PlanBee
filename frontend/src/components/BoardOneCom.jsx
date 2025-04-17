@@ -32,7 +32,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
     const getUserId = async () => {
       try {
         const response = await axios.get(
-          `https://wherethereis.site/auth/getUserId`,
+          `https://wherethereis.site/planbee/auth/getUserId`,
           {
             withCredentials: true,
           }
@@ -57,7 +57,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const fetchThisPost = async () => {
     try {
       const response = await axios.get(
-        `https://wherethereis.site/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}`,
+        `https://wherethereis.site/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}`,
         { withCredentials: true }
       );
       setThisPost(response.data.post);
@@ -71,7 +71,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const handleHit = async () => {
     try {
       await axios.put(
-        `https://wherethereis.site/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/hit`,
+        `https://wherethereis.site/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/hit`,
         {},
         { withCredentials: true }
       );
@@ -88,7 +88,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const handleModifyingSave = async () => {
     try {
       await axios.put(
-        `https://wherethereis.site/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}`,
+        `https://wherethereis.site/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}`,
         {
           postTitle: editedPost.title,
           postContent: editedPost.contents,
@@ -112,13 +112,13 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
     if (window.confirm("삭제하시겠습니까?")) {
       try {
         await axios.delete(
-          `https://wherethereis.site/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}`,
+          `https://wherethereis.site/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}`,
           { withCredentials: true }
         );
-        navigate(`/boardList/${thisGroupId.thisGroupId}`, {
+        navigate(`/planbee/boardList/${thisGroupId.thisGroupId}`, {
           state: {
             groupId: thisGroupId.thisGroupId,
-            redirectUrl: `/groups/${thisGroupId.thisGroupId}`,
+            redirectUrl: `/planbee/groups/${thisGroupId.thisGroupId}`,
           },
         });
       } catch (error) {
@@ -131,7 +131,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const handleAddReply = async () => {
     try {
       await axios.post(
-        `https://wherethereis.site/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply`,
+        `https://wherethereis.site/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply`,
         { replyContent: comment },
         { withCredentials: true }
       );
@@ -146,7 +146,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const handleAddNestedReply = async (parentReplyId) => {
     try {
       await axios.post(
-        `https://wherethereis.site/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply/${parentReplyId}`,
+        `https://wherethereis.site/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply/${parentReplyId}`,
         { replyContent: nestedReplyContent },
         { withCredentials: true }
       );
@@ -167,7 +167,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const handleModiSaveReply = async (replyId) => {
     try {
       await axios.put(
-        `https://wherethereis.site/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply/${replyId}`,
+        `https://wherethereis.site/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply/${replyId}`,
         { replyContent: editingReplyContent },
         { withCredentials: true }
       );
@@ -187,7 +187,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
   const handleDeleteReply = async (replyId) => {
     try {
       await axios.delete(
-        `https://wherethereis.site/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply/${replyId}`,
+        `https://wherethereis.site/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}/reply/${replyId}`,
         { withCredentials: true }
       );
       fetchThisPost();

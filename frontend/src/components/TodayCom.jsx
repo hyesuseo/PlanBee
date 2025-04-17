@@ -34,7 +34,7 @@ const TodayCom = ({setProgress}) => {
   const fetchDashBoard = async () => {
     try {
       const response = await axios.get(
-        `https://wherethereis.site/todolist/dashBoard/${getFormattedTodayYYMMDD()}`,
+        `https://wherethereis.site/planbee/todolist/dashBoard/${getFormattedTodayYYMMDD()}`,
         {
           withCredentials: true,
         }
@@ -78,7 +78,7 @@ const TodayCom = ({setProgress}) => {
     );
 
     try {
-      await axios.put("https://wherethereis.site/todolist/state", {
+      await axios.put("https://wherethereis.site/planbee/todolist/state", {
         tdDetailId: changedItem.tdDetailId,
         tdId: changedItem.tdId,
         tdDetail: changedItem.tdDetail,
@@ -106,7 +106,7 @@ const TodayCom = ({setProgress}) => {
     };
     try {
       const response = await axios.put(
-        `https://wherethereis.site/todolist/modify`,
+        `https://wherethereis.site/planbee/todolist/modify`,
         requestData,
         { withCredentials: true }
       );
@@ -132,7 +132,7 @@ const TodayCom = ({setProgress}) => {
   //todolist 삭제 함수 -> 세션연결 성공, 테스트 완료
   const handleDeleteClick = (id) => {
     axios
-      .delete(`https://wherethereis.site/todolist/del`, {
+      .delete(`https://wherethereis.site/planbee/todolist/del`, {
         data: { tdDetailId: id },
         withCredentials: true,
       })
@@ -161,7 +161,7 @@ const TodayCom = ({setProgress}) => {
 
     try {
       const response = await axios.post(
-        `https://wherethereis.site/todolist/write/${getFormattedTodayYYMMDD()}`,
+        `https://wherethereis.site/planbee/todolist/write/${getFormattedTodayYYMMDD()}`,
         newTaskData,
         { withCredentials: true }
       );
@@ -207,7 +207,7 @@ const TodayCom = ({setProgress}) => {
     console.log("전송하는 데이터:", requestData);
 
     try {
-      await axios.put("https://wherethereis.site/todolist/memoWrite", {
+      await axios.put("https://wherethereis.site/planbee/todolist/memoWrite", {
         tdId: todayTdId,
         tdMemo: newMemo,
       });
