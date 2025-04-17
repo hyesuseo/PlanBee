@@ -10,7 +10,7 @@ const Banner = () => {
     const getUserId = async () => {
       try {
         const response = await axios.get(
-          `https://wherethereis.site/auth/getUserId`,
+          `https://wherethereis.site/planbee/auth/getUserId`,
           {
             withCredentials: true,
           }
@@ -28,7 +28,7 @@ const Banner = () => {
   const logout = async () => {
     try {
       const response = await axios.post(
-        `https://wherethereis.site/auth/logout`,
+        `https://wherethereis.site/planbee/auth/logout`,
         null,
         { withCredentials: true }
       );
