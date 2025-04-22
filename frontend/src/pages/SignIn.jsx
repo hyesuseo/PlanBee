@@ -9,6 +9,7 @@ import logoYellow from "../images/Logo_Yellow.png";
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const [tempUserIdError, setTempUserIdError] = useState("") //회원가입시 에러방지지
   const [userInfo, setUserInfo] = useState({
     tempUserId: "",
     tempUserPw: "",
@@ -19,6 +20,13 @@ const SignIn = () => {
   const [userCode, setUserCode] = useState("");
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    if( name === "tempuserId"){
+      if( value.length > 10){
+        setTempUserIdError("아이디는 최대 10자까지 가능합니다")
+      } else {
+        setTempUserIdError("")
+      }
+    }
     setUserInfo((prevInfo) => ({
       ...prevInfo,
       [name]: value,
@@ -41,10 +49,10 @@ const SignIn = () => {
       // response.data 값에 따라 분류
       switch (response.data) {
         case -2:
-          alert("이메일이 중복되었습니다.");
+          alert("이미 가입된 이메일이 있습니다.");
           break;
         case -1:
-          alert("아이디가 중복되었습니다.");
+          alert("동일 아이디가 가입되어 있습니다.");
           break;
         case 1:
           alert("인증코드가 이메일로 전송되었습니다!");
@@ -82,7 +90,7 @@ const SignIn = () => {
       alert("인증 완료!");
     } catch (error) {
       console.error("인증 실패!", error);
-      alert("인증 실패!");
+      alert("인증 실패! 잠시 후 다시 시도하세요!");
     }
   };
   const SignUp = async () => {
@@ -97,7 +105,7 @@ const SignIn = () => {
       alert("회원가입 완료!");
       togglePopup();
     } catch (error) {
-      alert("회원가입 실패!");
+      alert("회원가입 실패! 잠시 후 다시 시도하세요요");
       console.error("회원가입 실패!", error);
     }
   };
@@ -137,6 +145,7 @@ const SignIn = () => {
       makeSession();
     } catch (error) {
       console.error("로그인 실패!", error);
+      alert("로그인 실패. 잠시 후 다시 시도하세요");
     }
   };
 
@@ -224,6 +233,7 @@ const SignIn = () => {
                     value={userInfo.tempUserId}
                     onChange={handleInputChange}
                   />
+                  {tempUserIdError && <div className="errorMsg">{tempUserIdError}</div>}
                   <input
                     type="password"
                     id="userPassword"
@@ -297,7 +307,7 @@ const SignIn = () => {
                   <input
                     className="signup_btn"
                     type="submit"
-                    value="SignUp"
+                    value="Join"
                     onClick={(e) => {
                       e.preventDefault();
                       SignUp();

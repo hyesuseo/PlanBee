@@ -115,12 +115,7 @@ const BoardOneCom = ({ thisPostId, thisGroupId }) => {
           `https://wherethereis.site/planbee/groups/${thisGroupId.thisGroupId}/boards/${thisPostId.id}`,
           { withCredentials: true }
         );
-        navigate(`/planbee/boardList/${thisGroupId.thisGroupId}`, {
-          state: {
-            groupId: thisGroupId.thisGroupId,
-            redirectUrl: `/planbee/groups/${thisGroupId.thisGroupId}`,
-          },
-        });
+        navigate(`/planbee/boardList/${thisGroupId.thisGroupId}`);
       } catch (error) {
         console.log("삭제 실패", error);
       }
